@@ -93,7 +93,7 @@ setopt append_history
 # コマンドが入力されるとすぐに追加
 setopt inc_append_history
 
-HISTFILE=$HOME/.zsh/zsh_history
+HISTFILE=$HOME/.zsh_history
 HISTSIZE=10000000
 SAVEHIST=10000000
 

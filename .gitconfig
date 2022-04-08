@@ -1,0 +1,39 @@
+[color]
+	ui = auto
+	gdiff = auto
+	gstatus = auto
+	gbranch = auto
+
+[core]
+	editor = nvim
+	precomposeunicode = true
+	quotepath = false
+
+[alias]
+	ci = commit
+	co = checkout
+	di = diff
+	st = status
+	up = pull --rebase
+
+[tig "bind"]
+	generic = g move-first-line
+	generic = G move-last-line
+
+[diff]
+	noprefix = true
+
+[ghq]
+	root = ~/work/src
+[commit]
+	gpgsign = false
+[gpg]
+	program = gpg
+[gitreview]
+	username = tnmt
+[pull]
+	rebase = false
+[include]
+	path = ~/.gitconfig.default
+[includeIf "gitdir:~/work/src/github.com/"]
+	path = ~/.gitconfig.github

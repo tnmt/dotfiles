@@ -1,0 +1,12 @@
+{
+  "diagnostic.enable": false,
+  "python.linting.enabled": false,
+  "python.jediPath": "~/.pyenv/versions/neovim3/lib/python3.10/site-packages/",
+  "languageserver": {
+    "golang": {
+      "command": "gopls",
+      "rootPatterns": ["go.mod", ".vim/", ".git/", ".hg/"],
+      "filetypes": ["go"]
+    }
+  }
+}

@@ -150,7 +150,7 @@ alias vim=nvim
 
 export LANG=ja_JP.UTF-8
 export LC_ALL=ja_JP.UTF-8
-export GOPATH=$HOME/work
+export GOPATH=$HOME/.go
 export PATH=${KREW_ROOT:-$HOME/.krew}/bin:$GOPATH/bin:$HOME/bin:$HOME/local/bin:$HOME/work/bin:/usr/local/bin:/usr/local/sbin:/sbin:/usr/sbin:$PATH
 arch=`uname -m`
 if [ "$arch" = "x86_64" ]; then

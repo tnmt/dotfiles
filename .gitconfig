@@ -23,8 +23,6 @@
 [diff]
 	noprefix = true
 
-[ghq]
-	root = ~/work/src
 [commit]
 	gpgsign = false
 [gpg]
@@ -35,5 +33,5 @@
 	rebase = false
 [include]
 	path = ~/.gitconfig.default
-[includeIf "gitdir:~/work/src/github.com/"]
+[includeIf "gitdir:~/ghq/github.com/"]
 	path = ~/.gitconfig.github

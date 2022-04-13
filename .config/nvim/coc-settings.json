@@ -1,7 +1,10 @@
 {
   "diagnostic.enable": false,
-  "python.linting.enabled": false,
-  "python.jediPath": "~/.pyenv/versions/neovim3/lib/python3.10/site-packages/",
+  "jedi": {
+    "enable": true,
+    "startupMessage": true,
+    "executable.command": "~/.pyenv/versions/neovim3/bin/jedi-language-server"
+  },
   "languageserver": {
     "golang": {
       "command": "gopls",

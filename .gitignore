@@ -3,9 +3,11 @@
 .config/configstore/
 .config/direnv/
 .config/direnv/allow/
+.config/gh/
 .config/hub
 .config/karabiner/
 .config/nvim/pack/
+.config/op/
 .config/pcamp/
 .config/systemd/
 .envrc

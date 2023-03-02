@@ -5,6 +5,7 @@ set autoindent
 set backspace=indent,eol,start
 set backup
 set backupdir=~/.vimbackup
+set clipboard+=unnamedplus
 set history=10000
 set hlsearch
 set ignorecase

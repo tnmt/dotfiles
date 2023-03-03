@@ -73,7 +73,7 @@ let g:lightline.active = {
   \   ]
   \ }
 " sheerun/vim-polyglot
-" let g:polyglot_disabled = ['csv']
+let g:polyglot_disabled = ['csv', 'markdown']
 " SirVer/ultisnips
 let g:UltiSnipsExpandTrigger="<tab>"
 let g:UltiSnipsJumpForwardTrigger="<c-n>"

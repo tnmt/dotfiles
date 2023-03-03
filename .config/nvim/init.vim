@@ -39,6 +39,7 @@ Plug 'neoclide/coc.nvim', {'branch': 'release'}
 Plug 'kassio/neoterm'
 Plug 'fatih/vim-go', { 'do': ':GoUpdateBinaries' }
 Plug 'vimwiki/vimwiki'
+Plug 'jiangmiao/auto-pairs'
 call plug#end()
 
 set number

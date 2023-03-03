@@ -17,6 +17,9 @@ set encoding=utf-8
 set fileencodings=utf-8,iso-2022-jp,cp932,sjis,euc-jp
 set fileformats=unix,dos,mac
 
+" sheerun/vim-polyglot
+let g:polyglot_disabled = ['csv', 'markdown']
+
 call plug#begin()
 Plug 'tpope/vim-commentary'
 Plug 'joshdick/onedark.vim'
@@ -72,8 +75,6 @@ let g:lightline.active = {
   \     ['linter_checking', 'linter_errors', 'linter_warnings', 'linter_ok'],
   \   ]
   \ }
-" sheerun/vim-polyglot
-let g:polyglot_disabled = ['csv', 'markdown']
 " SirVer/ultisnips
 let g:UltiSnipsExpandTrigger="<tab>"
 let g:UltiSnipsJumpForwardTrigger="<c-n>"

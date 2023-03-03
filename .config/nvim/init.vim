@@ -39,6 +39,7 @@ Plug 'honza/vim-snippets'
 Plug 'neoclide/coc.nvim', {'branch': 'release'}
 Plug 'kassio/neoterm'
 Plug 'fatih/vim-go', { 'do': ':GoUpdateBinaries' }
+Plug 'vimwiki/vimwiki'
 call plug#end()
 
 set number
@@ -110,3 +111,7 @@ let g:neoterm_autoscroll=1
 tnoremap <silent> <C-w> <C-\><C-n><C-w>
 nnoremap <silent> <C-n> :TREPLSendLine<CR>j0
 vnoremap <silent> <C-n> V:TREPLSendSelection<CR>'>j0
+
+" vimwiki/vimwiki
+let g:vimwiki_list = [{'path': '~/vimwiki/',
+                      \ 'syntax': 'markdown', 'ext': '.md'}]

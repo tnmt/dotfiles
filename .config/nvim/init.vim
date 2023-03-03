@@ -18,7 +18,7 @@ set fileencodings=utf-8,iso-2022-jp,cp932,sjis,euc-jp
 set fileformats=unix,dos,mac
 
 " sheerun/vim-polyglot
-let g:polyglot_disabled = ['csv', 'markdown']
+let g:polyglot_disabled = ['csv']
 
 call plug#begin()
 Plug 'tpope/vim-commentary'
@@ -52,6 +52,8 @@ set updatetime=100
 
 let g:python3_host_prog = $HOME . '/.pyenv/versions/neovim3/bin/python'
 
+" Yggdroot/indentLine
+let g:indentLine_setConceal = 0
 " joshdick/onedark.vim
 colorscheme onedark
 " itchyny/lightline.vim

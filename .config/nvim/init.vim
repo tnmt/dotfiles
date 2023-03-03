@@ -50,6 +50,7 @@ set updatetime=100
 let g:python3_host_prog = $HOME . '/.pyenv/versions/neovim3/bin/python'
 
 " joshdick/onedark.vim
+colorscheme onedark
 " itchyny/lightline.vim
 let g:lightline = {'colorscheme': 'onedark'}
 " sheerun/vim-polyglot

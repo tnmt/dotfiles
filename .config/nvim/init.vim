@@ -75,7 +75,9 @@ let g:lightline.active = {
 " sheerun/vim-polyglot
 " let g:polyglot_disabled = ['csv']
 " SirVer/ultisnips
-let g:UltiSnipsExpandTrigger='<c-j>'
+let g:UltiSnipsExpandTrigger="<tab>"
+let g:UltiSnipsJumpForwardTrigger="<c-n>"
+let g:UltiSnipsJumpBackwardTrigger="<c-p>"
 
 " dense-analysis/ale
 let g:ale_set_highlights = 0

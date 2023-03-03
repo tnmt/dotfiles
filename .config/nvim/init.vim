@@ -25,7 +25,7 @@ Plug 'tpope/vim-commentary'
 Plug 'joshdick/onedark.vim'
 Plug 'itchyny/lightline.vim'
 Plug 'ntpeters/vim-better-whitespace'
-Plug 'Yggdroot/indentLine'
+Plug 'nathanaelkane/vim-indent-guides'
 Plug 'scrooloose/nerdtree', { 'on': 'NERDTreeToggle' }
 Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
 Plug 'junegunn/fzf.vim'
@@ -52,8 +52,8 @@ set updatetime=100
 
 let g:python3_host_prog = $HOME . '/.pyenv/versions/neovim3/bin/python'
 
-" Yggdroot/indentLine
-let g:indentLine_setConceal = 0
+" nathanaelkane/vim-indent-guides
+let g:indent_guides_enable_on_vim_startup = 1
 " joshdick/onedark.vim
 colorscheme onedark
 " itchyny/lightline.vim

@@ -24,7 +24,6 @@ Plug 'itchyny/lightline.vim'
 Plug 'ntpeters/vim-better-whitespace'
 Plug 'Yggdroot/indentLine'
 Plug 'scrooloose/nerdtree', { 'on': 'NERDTreeToggle' }
-Plug 'majutsushi/tagbar', { 'on': 'TagbarToggle' }
 Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
 Plug 'junegunn/fzf.vim'
 Plug 'airblade/vim-rooter'
@@ -72,8 +71,6 @@ nmap <silent> <C-j> <Plug>(ale_next_wrap)
 
 " scrooloose/nerdtree
 nmap <C-e> :NERDTreeToggle<CR>
-" majutsushi/tagbar
-nmap <F8> :TagbarToggle<CR>
 " junegunn/fzf.vim
 nmap <C-p> :History<CR>
 

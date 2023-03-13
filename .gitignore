@@ -9,6 +9,7 @@
 .config/nvim/pack/
 .config/op/
 .config/pcamp/
+.config/raycast/
 .config/systemd/
 .envrc
 .gitconfig.default

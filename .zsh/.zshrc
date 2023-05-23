@@ -64,14 +64,6 @@ bindkey -e
 autoload -U colors
 colors
 
-# デフォルトの補完機能を有効
-autoload -Uz compinit
-compinit
-
-# bashの補完機能を有効
-autoload -U bashcompinit
-bashcompinit
-
 # 先頭に半角スペースを入れた場合はhistoryに記録しない
 setopt hist_ignore_space
 

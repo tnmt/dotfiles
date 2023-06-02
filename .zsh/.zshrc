@@ -120,16 +120,6 @@ linux*|cygwin)
     ;;
 esac
 
-if [ -x /usr/bin/ptrash ]
-then
-    alias rm='ptrash -i'
-elif [ -x /usr/local/bin/ptrash ]
-then
-    alias rm='/usr/local/bin/ptrash -i'
-else
-    alias rm='rm -i'
-fi
-
 alias mv='mv -i'
 alias info="info --vi-keys"
 alias g="git"

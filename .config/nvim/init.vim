@@ -162,3 +162,5 @@ let g:zettel_options = [{}, {"front_matter" :
       \   ["publish", "false"]
       \ ]
       \}]
+
+au UIEnter * set guifont=MesloLGS\ NF:h16

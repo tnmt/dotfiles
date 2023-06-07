@@ -26,6 +26,7 @@ Plug 'airblade/vim-gitgutter'
 Plug 'airblade/vim-rooter'
 Plug 'dense-analysis/ale'
 Plug 'fatih/vim-go', { 'do': ':GoUpdateBinaries' }
+Plug 'github/copilot.vim'
 Plug 'honza/vim-snippets'
 Plug 'itchyny/lightline.vim'
 Plug 'jiangmiao/auto-pairs'

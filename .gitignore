@@ -4,6 +4,7 @@
 .config/direnv/
 .config/direnv/allow/
 .config/gh/
+.config/github-copilot/
 .config/hub
 .config/karabiner/
 .config/nvim/pack/

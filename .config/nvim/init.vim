@@ -165,3 +165,12 @@ let g:zettel_options = [{}, {"front_matter" :
       \}]
 
 au UIEnter * set guifont=MesloLGS\ NF:h16
+
+" copilot.vim
+let g:copilot_filetypes = {
+      \ '*': v:false,
+      \ 'python': v:true,
+      \ 'go': v:true,
+      \ 'vim': v:true,
+      \ 'ruby': v:true,
+      \ }

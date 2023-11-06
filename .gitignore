@@ -28,6 +28,7 @@
 .ssh/id_rsa
 .ssh/id_rsa.pub
 .ssh/id_rsa_*
+.ssh/id_rsa.*
 .ssh/known_hosts
 .ssh/known_hosts.old
 .vim/.netrwhist

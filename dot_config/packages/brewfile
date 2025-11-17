@@ -1,0 +1,42 @@
+# Homebrew package list (for brew bundle)
+# Install with: brew bundle --file=~/.config/packages/brewfile
+
+# Development tools
+brew "git"
+brew "neovim"
+brew "luarocks"  # For Neovim Lua plugins
+brew "tmux"
+brew "starship"
+brew "gh"
+brew "fzf"
+brew "ripgrep"
+brew "fd"
+brew "bat"
+brew "eza"
+brew "delta"
+brew "jq"
+brew "yq"
+
+# Language tools
+brew "mise"  # Version manager for multiple languages
+brew "python"
+brew "node"
+brew "go"
+brew "rust"
+
+# System tools
+brew "htop"
+brew "ncdu"
+brew "tree"
+brew "wget"
+brew "curl"
+
+# Container tools
+brew "docker"
+brew "docker-compose"
+
+# Cloud tools
+brew "awscli"
+brew "kubectl"
+brew "helm"
+brew "terraform"

@@ -1,0 +1,10 @@
+{{- $email := promptStringOnce . "email" "Email address" -}}
+{{- $name := promptStringOnce . "name" "Full name" -}}
+{{- $hostname := .chezmoi.hostname -}}
+{{- $desktop := promptBoolOnce . "desktop" "Is this a desktop machine" -}}
+
+[data]
+    email = {{ $email | quote }}
+    name = {{ $name | quote }}
+    hostname = {{ $hostname | quote }}
+    desktop = {{ $desktop }}

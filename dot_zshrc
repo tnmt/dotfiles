@@ -1,0 +1,4 @@
+
+test -e "${HOME}/.iterm2_shell_integration.zsh" && source "${HOME}/.iterm2_shell_integration.zsh"
+
+if [ -e /home/tnmt/.nix-profile/etc/profile.d/nix.sh ]; then . /home/tnmt/.nix-profile/etc/profile.d/nix.sh; fi # added by Nix installer

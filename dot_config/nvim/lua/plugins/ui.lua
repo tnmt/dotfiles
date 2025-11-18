@@ -72,21 +72,15 @@ return {
     opts = {
       plugins = { spelling = true },
     },
-    config = function(_, opts)
-      local wk = require("which-key")
-      wk.setup(opts)
-      wk.register({
-        ["<leader>"] = {
-          f = { name = "+file/find" },
-          g = { name = "+git" },
-          h = { name = "+hunks" },
-          l = { name = "+lsp" },
-          s = { name = "+search" },
-          t = { name = "+toggle" },
-          w = { name = "+windows" },
-        },
-      })
-    end,
+    keys = {
+      { "<leader>f", group = "file/find" },
+      { "<leader>g", group = "git" },
+      { "<leader>h", group = "hunks" },
+      { "<leader>l", group = "lsp" },
+      { "<leader>s", group = "search" },
+      { "<leader>t", group = "toggle" },
+      { "<leader>w", group = "windows" },
+    },
   },
 
   -- Bufferline

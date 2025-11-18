@@ -2,3 +2,4 @@
 node = ["lts", "22.21.1"]
 python = "latest"
 ruby = "3.4.7"
+go = "latest"

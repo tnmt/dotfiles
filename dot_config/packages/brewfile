@@ -17,6 +17,7 @@ brew "delta"
 brew "jq"
 brew "yq"
 brew "tig"
+brew "the_platinum_searcher"
 
 # Language tools
 brew "mise"  # Version manager for multiple languages

@@ -1,7 +1,11 @@
 #!/usr/bin/env sh
 
 set -eu
-type bat >/dev/null 2>&1
+
+if ! command -v bat >/dev/null 2>&1; then
+	printf 'bat not found, skipping theme install\n' >&2
+	exit 0
+fi
 
 REPO='https://github.com/folke/tokyonight.nvim.git'
 REPO_NAME='tokyonight.nvim/'

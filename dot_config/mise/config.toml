@@ -1,5 +1,5 @@
 [tools]
-node = ["lts", "22.21.1"]
-python = "latest"
-ruby = "3.4.7"
+node = ["24", "22"]
+python = "3.14"
+ruby = "3.4"
 go = "latest"

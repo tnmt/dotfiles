@@ -16,6 +16,7 @@ brew "eza"
 brew "delta"
 brew "jq"
 brew "yq"
+brew "tig"
 
 # Language tools
 brew "mise"  # Version manager for multiple languages

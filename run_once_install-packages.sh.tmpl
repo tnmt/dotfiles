@@ -74,8 +74,6 @@ echo "Installing desktop applications..."
 # Linux desktop apps
 if command -v flatpak &> /dev/null; then
     flatpak install -y flathub \
-        com.google.Chrome \
-        org.mozilla.firefox \
         com.visualstudio.code \
         com.slack.Slack
 fi
@@ -84,12 +82,7 @@ fi
 {{ if eq .chezmoi.os "darwin" -}}
 # macOS desktop apps
 brew install --cask \
-    google-chrome \
     firefox \
-    visual-studio-code \
-    slack \
-    iterm2 \
-    rectangle
 {{ end -}}
 {{ end -}}
 

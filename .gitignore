@@ -1,0 +1,23 @@
+# Claude Code local configuration
+.claude/
+
+# Editor and IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+
+# Temporary files
+*.tmp
+*.bak
+*.log
+
+# Chezmoi working files
+.chezmoi.toml.lock
+
+# OS-specific
+Thumbs.db
+.Spotlight-V100
+.Trashes

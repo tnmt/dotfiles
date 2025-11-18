@@ -83,11 +83,15 @@ if ! command -v mise &> /dev/null; then
     fi
 fi
 
-# Setup mise tools
+# Setup mise tools without overriding existing config
 if command -v mise &> /dev/null; then
-    mise use --global node@latest
-    mise use --global python@latest
-    mise use --global ruby@latest
+    if [ -f "$HOME/.config/mise/config.toml" ]; then
+        mise install
+    else
+        mise use --global node@latest
+        mise use --global python@latest
+        mise use --global ruby@latest
+    fi
 fi
 
 echo "Package installation completed!"

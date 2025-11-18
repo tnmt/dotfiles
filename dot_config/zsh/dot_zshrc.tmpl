@@ -110,14 +110,19 @@ setopt transient_rprompt
 setopt no_flow_control
 
 # alias
-case "${OSTYPE}" in
-darwin*)
-    alias ls="ls -G -w -F"
-    ;;
-linux*|cygwin)
-    alias ls="ls -G -F --color=auto"
-    ;;
-esac
+if command -v eza >/dev/null 2>&1; then
+    alias ls="eza --color=auto --group-directories-first"
+    alias l="ls -lah"
+else
+    case "${OSTYPE}" in
+    darwin*)
+        alias ls="ls -G -w -F"
+        ;;
+    linux*|cygwin)
+        alias ls="ls -G -F --color=auto"
+        ;;
+    esac
+fi
 
 # Prefer bat over cat when available
 if command -v bat >/dev/null 2>&1; then

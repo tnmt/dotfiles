@@ -48,6 +48,7 @@ fi
 if command -v gem &> /dev/null; then
     gem install neovim
     gem install rubocop
+    gem install ruby-lsp
 fi
 
 # Install language servers and tools

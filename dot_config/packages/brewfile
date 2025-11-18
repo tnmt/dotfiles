@@ -27,7 +27,6 @@ brew "mise"  # Version manager for multiple languages
 brew "python"
 brew "node"
 brew "go"
-brew "rust"
 
 # System tools
 brew "htop"

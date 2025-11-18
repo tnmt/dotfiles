@@ -76,10 +76,6 @@ if command -v go &> /dev/null; then
     go install golang.org/x/tools/cmd/goimports@latest
 fi
 
-if command -v cargo &> /dev/null; then
-    cargo install rustfmt
-fi
-
 echo "Neovim setup completed!"
 echo "Run 'nvim' and lazy.nvim will automatically install plugins on first launch."
 

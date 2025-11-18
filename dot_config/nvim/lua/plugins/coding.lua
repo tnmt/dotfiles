@@ -24,7 +24,6 @@ return {
         "query",
         "regex",
         "ruby",
-        "rust",
         "toml",
         "tsx",
         "typescript",
@@ -65,7 +64,6 @@ return {
           "pyright",
           "gopls",
           "ts_ls",
-          "rust_analyzer",
           "ruby_lsp",
         },
         automatic_installation = true,
@@ -110,7 +108,6 @@ return {
         gopls = {},
         ts_ls = {},
         ruby_lsp = {},
-        rust_analyzer = {},
       }
 
       for server, config in pairs(servers) do
@@ -229,13 +226,6 @@ return {
     "fatih/vim-go",
     ft = "go",
     build = ":GoUpdateBinaries",
-  },
-
-  {
-    "simrat39/rust-tools.nvim",
-    ft = "rust",
-    dependencies = "neovim/nvim-lspconfig",
-    opts = {},
   },
 
   {

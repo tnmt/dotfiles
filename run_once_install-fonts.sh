@@ -42,29 +42,6 @@ install_nerd_fonts() {
         echo "MesloLGS Nerd Font already installed"
     fi
     
-    # Install FiraCode Nerd Font
-    if ! ls "$font_dir"/FiraCode* &>/dev/null; then
-        echo "Installing FiraCode Nerd Font..."
-        local tmp_dir=$(mktemp -d)
-        cd "$tmp_dir"
-        
-        # Download latest FiraCode Nerd Font
-        curl -fLo FiraCode.zip \
-            "https://github.com/ryanoasis/nerd-fonts/releases/latest/download/FiraCode.zip"
-        
-        unzip -q FiraCode.zip
-        mv *.ttf "$font_dir/" 2>/dev/null || true
-        mv *.otf "$font_dir/" 2>/dev/null || true
-        
-        # Clean up
-        cd - >/dev/null
-        rm -rf "$tmp_dir"
-        
-        echo "FiraCode Nerd Font installed successfully"
-    else
-        echo "FiraCode Nerd Font already installed"
-    fi
-    
     # Update font cache (Linux only)
     if [[ "$OSTYPE" != "darwin"* ]]; then
         if command -v fc-cache &>/dev/null; then

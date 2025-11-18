@@ -1,0 +1,12 @@
+Include conf.d/work.config conf.d/private.config ~/.colima/ssh_config
+
+Host *
+  ForwardAgent yes
+  User tnmt
+  ServerAliveInterval 60
+  ServerAliveCountMax 5
+  HashKnownHosts yes
+  ControlMaster auto
+  ControlPersist 60m
+  AddKeysToAgent yes
+  StrictHostKeyChecking no

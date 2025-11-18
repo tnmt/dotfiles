@@ -6,7 +6,6 @@ brew "git"
 brew "neovim"
 brew "luarocks"  # For Neovim Lua plugins
 brew "tmux"
-brew "starship"
 brew "gh"
 brew "fzf"
 brew "ripgrep"
@@ -35,6 +34,7 @@ brew "tree"
 brew "wget"
 brew "curl"
 brew "direnv"
+brew "envchain"
 
 # Container tools
 brew "docker"

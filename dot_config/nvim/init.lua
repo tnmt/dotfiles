@@ -1,5 +1,4 @@
 -- Neovim configuration
--- Migrated from Nix/Home-manager
 
 -- Bootstrap lazy.nvim
 local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"

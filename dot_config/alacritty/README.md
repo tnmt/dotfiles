@@ -1,6 +1,6 @@
 # Alacritty Configuration
 
-This is the Alacritty terminal emulator configuration, migrated from Nix/Home-manager.
+This is the Alacritty terminal emulator configuration.
 
 ## Features
 

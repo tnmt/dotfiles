@@ -1,7 +1,5 @@
 # Zsh Configuration
 
-Zsh設定をNix/Home-managerから移行したものです。
-
 ## プロンプト設定
 
 このzsh設定では、2つのプロンプトから選択できます：

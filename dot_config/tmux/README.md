@@ -1,6 +1,6 @@
 # Tmux Configuration
 
-Tmux設定をNix/Home-managerから移行したものです。TPM (Tmux Plugin Manager)を使用してプラグインを管理します。
+Tmux設定。TPM (Tmux Plugin Manager)を使用してプラグインを管理します。
 
 ## 主な機能
 

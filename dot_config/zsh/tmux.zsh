@@ -14,9 +14,6 @@ alias tkss='tmux kill-session -t'
 #   exec tmux new-session -A -s main
 # fi
 
-# Keybinding for tmux-sessionizer (Ctrl+f)
-bindkey -s '^f' 'tmux-sessionizer\n'
-
 # Function to create a new tmux session with a name based on current directory
 tnew() {
     local session_name="${1:-$(basename $(pwd))}"

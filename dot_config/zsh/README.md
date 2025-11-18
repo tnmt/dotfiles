@@ -116,9 +116,6 @@ p10k configure
 - `Ctrl+x Ctrl+b` - Gitブランチ切り替え
 - `Ctrl+]` - GHQリポジトリへジャンプ
 
-### tmux
-- `Ctrl+f` - tmux-sessionizer（プロジェクト切り替え）
-
 ## バージョンマネージャー
 
 以下のバージョンマネージャーが自動検出されます（インストールされている場合）：

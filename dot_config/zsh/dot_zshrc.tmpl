@@ -160,14 +160,6 @@ compinit
 # *brew
 eval "$(direnv hook zsh)"
 
-## goenv
-if [ -d $HOME/.goenv ]
-then
-    export GOENV_ROOT=$HOME/.goenv
-    export PATH="$GOENV_ROOT/bin:$GOENV_ROOT/shims:$PATH"
-    eval "$(goenv init -)"
-fi
-
 # Prompt configuration
 # Choose one: Powerlevel10k (p10k) or Starship
 

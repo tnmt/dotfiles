@@ -3,6 +3,12 @@
 # Setup Neovim
 set -e
 
+STATE_FILE="$HOME/.local/state/nvim/setup.done"
+if [ -f "$STATE_FILE" ]; then
+    echo "Neovim setup already complete. Skipping."
+    exit 0
+fi
+
 echo "Setting up Neovim..."
 
 # Create backup directory for vim
@@ -76,3 +82,6 @@ fi
 
 echo "Neovim setup completed!"
 echo "Run 'nvim' and lazy.nvim will automatically install plugins on first launch."
+
+mkdir -p "$(dirname "$STATE_FILE")"
+touch "$STATE_FILE"

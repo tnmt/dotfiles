@@ -140,6 +140,10 @@ if [ "$arch" = "x86_64" ]; then
 else
     export PATH="/opt/homebrew/bin:$PATH"
 fi
+# Linuxbrew
+if [ -x /home/linuxbrew/.linuxbrew/bin/brew ]; then
+    eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
+fi
 export MANPATH=$MANPATH
 export PAGER=less
 export LESS='-R -X'

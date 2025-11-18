@@ -82,7 +82,7 @@ The configuration includes support for:
 - Go (gopls, gofmt)
 - Ruby (solargraph, rubocop)
 - Rust (rust-analyzer, rustfmt)
-- JavaScript/TypeScript (tsserver, eslint, prettier)
+- JavaScript/TypeScript (ts_ls, prettier)
 - Lua (lua_ls, stylua)
 
 ## First Time Setup

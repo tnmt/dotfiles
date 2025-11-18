@@ -41,6 +41,7 @@ fi
 # Ruby support
 if command -v gem &> /dev/null; then
     gem install neovim
+    gem install rubocop
 fi
 
 # Install language servers and tools

@@ -10,6 +10,20 @@ if [ -x /home/linuxbrew/.linuxbrew/bin/brew ]; then
     eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
 fi
 
+export LANG=ja_JP.UTF-8
+export LC_ALL=ja_JP.UTF-8
+export GOPATH=$HOME/.go
+export PATH=${KREW_ROOT:-$HOME/.krew}/bin:$GOPATH/bin:$HOME/bin:$HOME/.local/bin:$HOME/work/bin:/usr/local/bin:/usr/local/sbin:/sbin:/usr/sbin:$PATH
+arch=`uname -m`
+if [ "$arch" = "x86_64" ]; then
+    export PATH="/usr/local/bin/brew:$PATH"
+else
+    export PATH="/opt/homebrew/bin:$PATH"
+fi
+export MANPATH=$MANPATH
+export PAGER=less
+export LESS='-R -X'
+
 ### Added by Zinit's installer
 if [[ ! -f $HOME/.local/share/zinit/zinit.git/zinit.zsh ]]; then
     print -P "%F{33} %F{220}Installing %F{33}ZDHARMA-CONTINUUM%F{220} Initiative Plugin Manager (%F{33}zdharma-continuum/zinit%F{220})…%f"
@@ -148,20 +162,6 @@ alias rcd='cd $(ghq list -p | peco)'
 alias j=zshz
 alias vi=nvim
 alias vim=nvim
-
-export LANG=ja_JP.UTF-8
-export LC_ALL=ja_JP.UTF-8
-export GOPATH=$HOME/.go
-export PATH=${KREW_ROOT:-$HOME/.krew}/bin:$GOPATH/bin:$HOME/bin:$HOME/.local/bin:$HOME/work/bin:/usr/local/bin:/usr/local/sbin:/sbin:/usr/sbin:$PATH
-arch=`uname -m`
-if [ "$arch" = "x86_64" ]; then
-    export PATH="/usr/local/bin/brew:$PATH"
-else
-    export PATH="/opt/homebrew/bin:$PATH"
-fi
-export MANPATH=$MANPATH
-export PAGER=less
-export LESS='-R -X'
 
 fpath=(~/.config/zsh/completions $fpath)
 

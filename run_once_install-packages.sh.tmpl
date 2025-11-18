@@ -85,12 +85,14 @@ fi
 
 # Setup mise tools without overriding existing config
 if command -v mise &> /dev/null; then
+    mkdir -p "$HOME/.config/mise"
     if [ -f "$HOME/.config/mise/config.toml" ]; then
         mise install
     else
-        mise use --global node@latest
-        mise use --global python@latest
-        mise use --global ruby@latest
+        cat >"$HOME/.config/mise/config.toml" <<'EOF'
+{{ includeTemplate "dot_config/mise/config.toml" . -}}
+EOF
+        mise install
     fi
 fi
 

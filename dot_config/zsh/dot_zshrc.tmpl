@@ -158,13 +158,6 @@ autoload -Uz compinit
 compinit
 
 # *brew
-## plenv
-if [ -d $HOME/.plenv ]
-then
-    export PATH="$HOME/.plenv/bin:$HOME/.plenv/shims:$PATH"
-    eval "$(plenv init -)"
-fi
-
 eval "$(direnv hook zsh)"
 
 ## goenv

@@ -78,7 +78,7 @@ This is a modern Neovim configuration using Lua and lazy.nvim for plugin managem
 ## Language Support
 
 The configuration includes support for:
-- Python (pyright, black, ruff)
+- Python (pyright, ruff-lsp, black)
 - Go (gopls, gofmt)
 - Ruby (solargraph, rubocop)
 - Rust (rust-analyzer, rustfmt)

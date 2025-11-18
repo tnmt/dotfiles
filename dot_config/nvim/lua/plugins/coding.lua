@@ -63,6 +63,7 @@ return {
         ensure_installed = {
           "lua_ls",
           "pyright",
+          "ruff_lsp",
           "gopls",
           "ts_ls",
           "rust_analyzer",
@@ -105,6 +106,7 @@ return {
           },
         },
         pyright = {},
+        ruff_lsp = {},
         gopls = {},
         ts_ls = {},
         solargraph = {},
@@ -209,7 +211,6 @@ return {
           null_ls.builtins.formatting.gofmt,
           
           -- Diagnostics
-          null_ls.builtins.diagnostics.ruff,
           null_ls.builtins.diagnostics.eslint,
           null_ls.builtins.diagnostics.rubocop,
         },

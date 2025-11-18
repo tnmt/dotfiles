@@ -93,50 +93,30 @@ return {
       end
 
       -- Setup LSP servers
-      local lspconfig = require("lspconfig")
       local capabilities = require("cmp_nvim_lsp").default_capabilities()
 
-      -- Lua
-      lspconfig.lua_ls.setup({
-        on_attach = on_attach,
-        capabilities = capabilities,
-        settings = {
-          Lua = {
-            workspace = { checkThirdParty = false },
-            telemetry = { enable = false },
+      local servers = {
+        lua_ls = {
+          settings = {
+            Lua = {
+              workspace = { checkThirdParty = false },
+              telemetry = { enable = false },
+            },
           },
         },
-      })
+        pyright = {},
+        gopls = {},
+        ts_ls = {},
+        solargraph = {},
+        rust_analyzer = {},
+      }
 
-      -- Python
-      lspconfig.pyright.setup({
-        on_attach = on_attach,
-        capabilities = capabilities,
-      })
-
-      -- Go
-      lspconfig.gopls.setup({
-        on_attach = on_attach,
-        capabilities = capabilities,
-      })
-
-      -- TypeScript/JavaScript
-      lspconfig.ts_ls.setup({
-        on_attach = on_attach,
-        capabilities = capabilities,
-      })
-
-      -- Ruby
-      lspconfig.solargraph.setup({
-        on_attach = on_attach,
-        capabilities = capabilities,
-      })
-
-      -- Rust
-      lspconfig.rust_analyzer.setup({
-        on_attach = on_attach,
-        capabilities = capabilities,
-      })
+      for server, config in pairs(servers) do
+        config.on_attach = on_attach
+        config.capabilities = capabilities
+        vim.lsp.config(server, config)
+        vim.lsp.enable(server)
+      end
     end,
   },
 

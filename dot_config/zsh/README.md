@@ -122,7 +122,6 @@ p10k configure
 - **pyenv** - Python
 - **plenv** - Perl
 - **rbenv** - Ruby
-- **nodebrew** - Node.js
 - **goenv** - Go
 - **mise** - 複数言語対応
 

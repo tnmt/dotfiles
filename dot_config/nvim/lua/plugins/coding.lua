@@ -69,6 +69,7 @@ return {
           "ruby_lsp",
         },
         automatic_installation = true,
+        automatic_enable = false,
       })
 
       -- Setup neodev for Neovim Lua development

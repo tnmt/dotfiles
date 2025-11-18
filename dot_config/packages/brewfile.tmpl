@@ -33,9 +33,11 @@ brew "curl"
 brew "direnv"
 brew "envchain"
 
-# Container tools
+# Container tools (macOS only; install from package manager on Linux)
+{{- if eq .chezmoi.os "darwin" }}
 brew "docker"
 brew "docker-compose"
+{{- end }}
 
 # Cloud tools
 brew "awscli"

@@ -34,7 +34,12 @@ if command -v apt &> /dev/null; then
         software-properties-common \
         zsh \
         fonts-powerline \
-        fonts-firacode
+        fonts-firacode \
+        zlib1g-dev \
+        libffi-dev \
+        libyaml-dev \
+        libreadline-dev \
+        libssl-dev
 elif command -v dnf &> /dev/null; then
     echo "Installing Linux packages with dnf..."
     sudo dnf install -y \

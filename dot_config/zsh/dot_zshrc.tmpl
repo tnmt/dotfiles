@@ -111,7 +111,7 @@ setopt no_flow_control
 
 # alias
 if command -v eza >/dev/null 2>&1; then
-    alias ls="eza --color=auto --group-directories-first"
+    alias ls="eza --color=auto --group-directories-first --time-style=full-iso"
     alias l="ls -lah"
 else
     case "${OSTYPE}" in

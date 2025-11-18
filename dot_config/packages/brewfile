@@ -31,6 +31,7 @@ brew "ncdu"
 brew "tree"
 brew "wget"
 brew "curl"
+brew "direnv"
 
 # Container tools
 brew "docker"

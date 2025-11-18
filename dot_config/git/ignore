@@ -1,0 +1,35 @@
+# Global gitignore
+# This file is automatically used by git for all repositories
+
+# Editor and IDE
+*~
+*.swp
+*.swo
+.vscode/
+.idea/
+.DS_Store
+
+# Environment files
+.direnv
+.env
+.envrc
+
+# Version files
+.ruby-version
+.go-version
+.node-version
+.python-version
+
+# Claude Code
+**/.claude/settings.local.json
+.claude/
+
+# OS-specific
+Thumbs.db
+.Spotlight-V100
+.Trashes
+
+# Temporary files
+*.tmp
+*.bak
+*.log

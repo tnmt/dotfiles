@@ -1,0 +1,57 @@
+# Git configuration
+# Migrated from Nix/Home-manager
+
+[user]
+  email = {{ .email }}
+  name = {{ .name }}
+
+[core]
+  editor = nvim
+  excludesfile = ~/.config/git/ignore
+
+[push]
+  # remoteに同じbranch名でpushする
+  # upstreamの設定を要求しない
+  default = current
+
+[pull]
+  rebase = true
+
+[init]
+  defaultBranch = main
+
+[color]
+  ui = auto
+
+[credential]
+  helper = cache --timeout=604800
+
+[rebase]
+  autosquash = true
+  autostash = true
+  stat = true
+
+[alias]
+  co = checkout
+  ci = commit
+  di = diff
+  st = status
+  up = pull --rebase
+  br = branch
+  graph = log --graph --oneline --decorate --all
+  ls = log --pretty=format:"%C(yellow)%h%Cred%d\\ %Creset%s%Cblue\\ [%cn]" --decorate
+  ll = log --pretty=format:"%C(yellow)%h%Cred%d\\ %Creset%s%Cblue\\ [%cn]" --decorate --numstat
+  undo = reset --soft HEAD^
+
+[diff]
+  colorMoved = zebra
+
+[merge]
+  conflictstyle = diff3
+
+[fetch]
+  prune = true
+
+[include]
+  # Machine-specific git configuration (optional)
+  path = ~/.gitconfig.local

@@ -1,0 +1,114 @@
+#!/bin/bash
+
+# Install fonts for terminal
+set -e
+
+echo "Installing fonts..."
+
+# Install Nerd Fonts
+install_nerd_fonts() {
+    local font_dir
+    
+    if [[ "$OSTYPE" == "darwin"* ]]; then
+        font_dir="$HOME/Library/Fonts"
+    else
+        font_dir="$HOME/.local/share/fonts"
+    fi
+    
+    mkdir -p "$font_dir"
+    
+    # Install MesloLGS Nerd Font (recommended for Powerlevel10k)
+    if ! ls "$font_dir"/MesloLGS* &>/dev/null; then
+        echo "Installing MesloLGS Nerd Font..."
+        local tmp_dir=$(mktemp -d)
+        cd "$tmp_dir"
+        
+        # Download MesloLGS NF fonts
+        for style in Regular Bold Italic "Bold Italic"; do
+            style_file=$(echo "$style" | sed 's/ /%20/g')
+            curl -fLo "MesloLGS NF ${style}.ttf" \
+                "https://github.com/romkatv/powerlevel10k-media/raw/master/MesloLGS%20NF%20${style_file}.ttf"
+        done
+        
+        # Move fonts to font directory
+        mv *.ttf "$font_dir/"
+        
+        # Clean up
+        cd - >/dev/null
+        rm -rf "$tmp_dir"
+        
+        echo "MesloLGS Nerd Font installed successfully"
+    else
+        echo "MesloLGS Nerd Font already installed"
+    fi
+    
+    # Install FiraCode Nerd Font
+    if ! ls "$font_dir"/FiraCode* &>/dev/null; then
+        echo "Installing FiraCode Nerd Font..."
+        local tmp_dir=$(mktemp -d)
+        cd "$tmp_dir"
+        
+        # Download latest FiraCode Nerd Font
+        curl -fLo FiraCode.zip \
+            "https://github.com/ryanoasis/nerd-fonts/releases/latest/download/FiraCode.zip"
+        
+        unzip -q FiraCode.zip
+        mv *.ttf "$font_dir/" 2>/dev/null || true
+        mv *.otf "$font_dir/" 2>/dev/null || true
+        
+        # Clean up
+        cd - >/dev/null
+        rm -rf "$tmp_dir"
+        
+        echo "FiraCode Nerd Font installed successfully"
+    else
+        echo "FiraCode Nerd Font already installed"
+    fi
+    
+    # Update font cache (Linux only)
+    if [[ "$OSTYPE" != "darwin"* ]]; then
+        if command -v fc-cache &>/dev/null; then
+            echo "Updating font cache..."
+            fc-cache -f "$font_dir"
+        fi
+    fi
+}
+
+# Install using package manager if available
+if command -v brew &>/dev/null; then
+    echo "Installing fonts with Homebrew..."
+    brew tap homebrew/cask-fonts 2>/dev/null || true
+    brew install --cask font-meslo-lg-nerd-font 2>/dev/null || true
+    brew install --cask font-fira-code-nerd-font 2>/dev/null || true
+elif command -v apt &>/dev/null; then
+    echo "Installing system fonts with apt..."
+    sudo apt update
+    sudo apt install -y fonts-powerline fonts-firacode
+    # Still need to install Nerd Font variants manually
+    install_nerd_fonts
+elif command -v dnf &>/dev/null; then
+    echo "Installing system fonts with dnf..."
+    sudo dnf install -y powerline-fonts fira-code-fonts
+    # Still need to install Nerd Font variants manually
+    install_nerd_fonts
+elif command -v pacman &>/dev/null; then
+    echo "Installing fonts with pacman..."
+    sudo pacman -S --noconfirm ttf-fira-code powerline-fonts
+    # Install from AUR if yay is available
+    if command -v yay &>/dev/null; then
+        yay -S --noconfirm ttf-meslo-nerd-font-powerlevel10k
+    else
+        install_nerd_fonts
+    fi
+else
+    echo "No package manager found, installing fonts manually..."
+    install_nerd_fonts
+fi
+
+echo "Font installation completed!"
+echo ""
+echo "Recommended fonts for terminals:"
+echo "  - MesloLGS Nerd Font (best for Powerlevel10k)"
+echo "  - FiraCode Nerd Font (good ligatures support)"
+echo ""
+echo "You may need to restart your terminal and select the font in preferences."

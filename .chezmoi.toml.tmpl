@@ -1,5 +1,5 @@
-{{- $email := promptStringOnce . "email" "Email address" -}}
-{{- $name := promptStringOnce . "name" "Full name" -}}
+{{- $email := promptStringOnce . "email" "Email address" "s@tnmt.info" -}}
+{{- $name := promptStringOnce . "name" "Full name" "Shinya Tsunematsu" -}}
 {{- $hostname := .chezmoi.hostname -}}
 {{- $desktop := promptBoolOnce . "desktop" "Is this a desktop machine" -}}
 

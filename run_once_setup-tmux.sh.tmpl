@@ -1,0 +1,77 @@
+#!/bin/bash
+
+# Setup tmux and TPM (Tmux Plugin Manager)
+set -e
+
+echo "Setting up tmux..."
+
+# Install tmux if not installed
+if ! command -v tmux &> /dev/null; then
+    echo "Installing tmux..."
+    if command -v brew &> /dev/null; then
+        brew install tmux
+    elif command -v apt &> /dev/null; then
+        sudo apt update && sudo apt install -y tmux
+    elif command -v dnf &> /dev/null; then
+        sudo dnf install -y tmux
+    elif command -v pacman &> /dev/null; then
+        sudo pacman -S --noconfirm tmux
+    else
+        echo "Please install tmux manually"
+        exit 1
+    fi
+fi
+
+# Install clipboard tools for tmux-yank
+echo "Installing clipboard utilities..."
+{{- if eq .chezmoi.os "darwin" }}
+# macOS has pbcopy/pbpaste built-in
+echo "Using built-in pbcopy/pbpaste on macOS"
+{{- else }}
+# Linux: install xclip or xsel
+if ! command -v xclip &> /dev/null && ! command -v xsel &> /dev/null; then
+    if command -v apt &> /dev/null; then
+        sudo apt install -y xclip
+    elif command -v dnf &> /dev/null; then
+        sudo dnf install -y xclip
+    elif command -v pacman &> /dev/null; then
+        sudo pacman -S --noconfirm xclip
+    fi
+fi
+{{- end }}
+
+# Install TPM (Tmux Plugin Manager)
+TPM_DIR="$HOME/.tmux/plugins/tpm"
+if [ ! -d "$TPM_DIR" ]; then
+    echo "Installing TPM (Tmux Plugin Manager)..."
+    git clone https://github.com/tmux-plugins/tpm "$TPM_DIR"
+else
+    echo "TPM already installed"
+fi
+
+# Install tmux plugins
+echo "Installing tmux plugins..."
+if [ -f "$TPM_DIR/bin/install_plugins" ]; then
+    "$TPM_DIR/bin/install_plugins"
+else
+    echo "TPM installation incomplete. Please restart tmux and press Ctrl-t + I to install plugins."
+fi
+
+echo "Tmux setup completed!"
+echo ""
+echo "Usage:"
+echo "  - Start tmux: tmux"
+echo "  - Prefix key: Ctrl-t"
+echo "  - Install plugins: Ctrl-t + I (capital i)"
+echo "  - Update plugins: Ctrl-t + U"
+echo "  - Uninstall plugins: Ctrl-t + alt + u"
+echo "  - Reload config: Ctrl-t + r"
+echo ""
+echo "Key bindings:"
+echo "  - Split horizontal: Ctrl-t + |"
+echo "  - Split vertical: Ctrl-t + -"
+echo "  - Navigate panes: Alt + Arrow keys"
+echo "  - Resize panes: Ctrl-t + Ctrl + h/j/k/l"
+echo "  - Synchronize panes: Ctrl-t + e (on) / E (off)"
+echo "  - Copy mode: Ctrl-t + ["
+echo "  - Paste: Ctrl-t + ]"

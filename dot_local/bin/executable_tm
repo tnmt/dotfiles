@@ -1,0 +1,123 @@
+#!/bin/bash
+
+# Tmux helper script - Quick session management
+
+show_help() {
+    cat << EOF
+Tmux Helper - Quick session management
+
+Usage: tm [COMMAND] [OPTIONS]
+
+Commands:
+    ls, list                List all sessions
+    new [NAME]             Create new session
+    attach, a [NAME]       Attach to session (or last session if no name)
+    kill [NAME]            Kill session
+    killall                Kill all sessions
+    rename [OLD] [NEW]     Rename session
+    help, -h, --help       Show this help message
+
+Examples:
+    tm ls                  # List all sessions
+    tm new myproject       # Create session named 'myproject'
+    tm a myproject         # Attach to 'myproject' session
+    tm a                   # Attach to last used session
+    tm kill myproject      # Kill 'myproject' session
+    tm killall             # Kill all sessions
+
+If no command is provided, it will:
+  - Create a new session if none exists
+  - Show session list if multiple sessions exist
+  - Attach to the session if only one exists
+EOF
+}
+
+# No arguments - smart default behavior
+if [[ $# -eq 0 ]]; then
+    sessions=$(tmux ls 2>/dev/null)
+    count=$(echo "$sessions" | wc -l)
+
+    if [[ -z $sessions ]]; then
+        # No sessions - create a new one
+        echo "No sessions found. Creating new session..."
+        tmux new-session
+    elif [[ $count -eq 1 ]]; then
+        # Only one session - attach to it
+        session_name=$(echo "$sessions" | cut -d: -f1)
+        echo "Attaching to session: $session_name"
+        tmux attach-session -t "$session_name"
+    else
+        # Multiple sessions - show list and let user choose
+        echo "Multiple sessions found:"
+        echo "$sessions"
+        echo ""
+        read -p "Enter session name to attach (or 'n' for new): " choice
+        if [[ $choice == "n" ]]; then
+            read -p "New session name: " new_name
+            tmux new-session -s "$new_name"
+        else
+            tmux attach-session -t "$choice"
+        fi
+    fi
+    exit 0
+fi
+
+# Parse commands
+case "$1" in
+    ls|list)
+        tmux ls
+        ;;
+    new)
+        if [[ -n $2 ]]; then
+            tmux new-session -s "$2"
+        else
+            tmux new-session
+        fi
+        ;;
+    attach|a)
+        if [[ -n $2 ]]; then
+            tmux attach-session -t "$2"
+        else
+            # Attach to last used session
+            tmux attach-session
+        fi
+        ;;
+    kill)
+        if [[ -n $2 ]]; then
+            tmux kill-session -t "$2"
+            echo "Session '$2' killed"
+        else
+            echo "Error: Please specify session name"
+            echo "Usage: tm kill [SESSION_NAME]"
+            exit 1
+        fi
+        ;;
+    killall)
+        read -p "Kill all tmux sessions? (y/N): " confirm
+        if [[ $confirm == "y" || $confirm == "Y" ]]; then
+            tmux kill-server
+            echo "All sessions killed"
+        else
+            echo "Cancelled"
+        fi
+        ;;
+    rename)
+        if [[ -n $2 && -n $3 ]]; then
+            tmux rename-session -t "$2" "$3"
+            echo "Session '$2' renamed to '$3'"
+        else
+            echo "Error: Please specify old and new session names"
+            echo "Usage: tm rename [OLD_NAME] [NEW_NAME]"
+            exit 1
+        fi
+        ;;
+    help|-h|--help)
+        show_help
+        ;;
+    *)
+        echo "Unknown command: $1"
+        echo ""
+        show_help
+        exit 1
+        ;;
+esac

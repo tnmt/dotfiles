@@ -23,9 +23,6 @@ brew "neofetch"
 
 # Language tools
 brew "mise"  # Version manager for multiple languages
-brew "python"
-brew "node"
-brew "go"
 
 # System tools
 brew "htop"

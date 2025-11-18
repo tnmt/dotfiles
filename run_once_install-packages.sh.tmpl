@@ -23,18 +23,6 @@ if command -v brew &> /dev/null; then
     brew bundle --file=~/.config/packages/brewfile
 fi
 
-# Install mise (development tool version manager)
-if ! command -v mise &> /dev/null; then
-    echo "Installing mise..."
-    curl https://mise.run | sh
-    echo 'eval "$(~/.local/bin/mise activate zsh)"' >> ~/.zshrc
-fi
-
-# Setup mise tools
-if command -v mise &> /dev/null; then
-    mise use --global node@latest
-    mise use --global python@latest
-fi
 
 # Linux-specific packages (using native package manager)
 {{ if eq .chezmoi.os "linux" -}}
@@ -85,5 +73,20 @@ brew install --cask \
     firefox
 {{ end -}}
 {{ end -}}
+
+# Install mise (development tool version manager)
+if ! command -v mise &> /dev/null; then
+    echo "Installing mise..."
+    curl https://mise.run | sh
+    if [ -f "$HOME/.config/zsh/.zshrc" ] && ! grep -q 'mise activate zsh' "$HOME/.config/zsh/.zshrc"; then
+        echo 'eval "$(~/.local/bin/mise activate zsh)"' >> "$HOME/.config/zsh/.zshrc"
+    fi
+fi
+
+# Setup mise tools
+if command -v mise &> /dev/null; then
+    mise use --global node@latest
+    mise use --global python@latest
+fi
 
 echo "Package installation completed!"

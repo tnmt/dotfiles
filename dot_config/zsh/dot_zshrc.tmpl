@@ -119,6 +119,11 @@ linux*|cygwin)
     ;;
 esac
 
+# Activate mise to provide language runtimes
+if command -v mise >/dev/null 2>&1; then
+    eval "$(mise activate zsh)"
+fi
+
 alias mv='mv -i'
 alias info="info --vi-keys"
 alias g="git"

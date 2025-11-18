@@ -66,7 +66,7 @@ return {
           "gopls",
           "ts_ls",
           "rust_analyzer",
-          "solargraph",
+          "ruby_lsp",
         },
         automatic_installation = true,
       })
@@ -108,7 +108,7 @@ return {
         ruff_lsp = {},
         gopls = {},
         ts_ls = {},
-        solargraph = {},
+        ruby_lsp = {},
         rust_analyzer = {},
       }
 

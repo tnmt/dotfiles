@@ -19,6 +19,7 @@ brew "yq"
 brew "tig"
 brew "the_platinum_searcher"
 brew "rg"
+brew "rubocop"
 
 # Language tools
 brew "mise"  # Version manager for multiple languages

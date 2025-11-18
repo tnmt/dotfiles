@@ -121,7 +121,6 @@ p10k configure
 以下のバージョンマネージャーが自動検出されます（インストールされている場合）：
 - **pyenv** - Python
 - **plenv** - Perl
-- **rbenv** - Ruby
 - **goenv** - Go
 - **mise** - 複数言語対応
 

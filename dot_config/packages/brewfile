@@ -20,6 +20,7 @@ brew "tig"
 brew "the_platinum_searcher"
 brew "rg"
 brew "ghq"
+brew "neofetch"
 
 # Language tools
 brew "mise"  # Version manager for multiple languages

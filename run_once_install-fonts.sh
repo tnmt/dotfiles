@@ -83,7 +83,7 @@ if command -v brew &>/dev/null; then
 elif command -v apt &>/dev/null; then
     echo "Installing system fonts with apt..."
     sudo apt update
-    sudo apt install -y fonts-powerline fonts-firacode
+    sudo apt install -y fonts-powerline fonts-firacode unzip
     # Still need to install Nerd Font variants manually
     install_nerd_fonts
 elif command -v dnf &>/dev/null; then

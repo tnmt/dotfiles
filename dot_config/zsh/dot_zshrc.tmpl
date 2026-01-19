@@ -55,7 +55,6 @@ zinit ice wait lucid
 zinit light chrissicool/zsh-256color
 zinit ice depth=1
 zinit light romkatv/powerlevel10k
-zinit light agkozak/zsh-z
 zinit light zdharma-continuum/history-search-multi-word
 zinit light mollifier/anyframe
 zinit light Dbz/kube-aliases
@@ -153,13 +152,17 @@ if command -v mise >/dev/null 2>&1; then
     eval "$(mise activate zsh)"
 fi
 
+# Initialize zoxide (replaces z/j commands)
+if command -v zoxide >/dev/null 2>&1; then
+    eval "$(zoxide init zsh --cmd j)"
+fi
+
 alias mv='mv -i'
 alias info="info --vi-keys"
 alias g="git"
 alias be="bundle exec"
 alias td="mkdir -p ~/tmp/$(date '+%Y%m%d-%H%M') && cd ~/tmp/$(date '+%Y%m%d-%H%M')"
 alias rcd='cd $(ghq list -p | peco)'
-alias j=zshz
 alias vi=nvim
 alias vim=nvim
 

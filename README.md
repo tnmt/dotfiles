@@ -8,6 +8,7 @@ tnmtの開発環境を `chezmoi` で管理するための設定群です。XDG �
 - **エディタ**: Neovim（lazy.nvim、mason、none-ls で LSP/formatter を管理）。
 - **パッケージ管理**: `dot_config/packages/brewfile` を `brew bundle` で適用。`run_onchange_brew-bundle.sh` で Brewfile 変更時に自動実行。
 - **ランタイム設定**: `run_once_setup-nvim.sh` などのセットアップスクリプト、`dot_zshenv` による XDG 変数設定。
+- **Claude CLI**: `run_once_install-claude-cli.sh` でnative版をインストール（旧npm版から移行）。
 
 ## セットアップ
 
@@ -29,9 +30,12 @@ tnmtの開発環境を `chezmoi` で管理するための設定群です。XDG �
    brew bundle --file=$HOME/.config/packages/brewfile
    ```
 
-4. **Neovim 初期化**  
-   `run_once_setup-nvim.sh` により依存が導入されます。再実行を避けるために `~/.local/state/nvim/setup.done` を利用しています。  
+4. **Neovim 初期化**
+   `run_once_setup-nvim.sh` により依存が導入されます。再実行を避けるために `~/.local/state/nvim/setup.done` を利用しています。
    追加で `nvim` を起動し、lazy.nvim がプラグインを同期するのを待ちます。
+
+5. **Claude CLI インストール**
+   `run_once_install-claude-cli.sh` により公式のnative版Claude CLIが自動インストールされます。
 
 ## 1Password 連携
 

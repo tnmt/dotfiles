@@ -3,7 +3,6 @@ node = ["24", "22"]
 python = "3.14"
 ruby = ["4.0", "3.4"]
 go = "latest"
-"npm:@anthropic-ai/claude-code" = "latest"
 "npm:@openai/codex" = "latest"
 "npm:@google/gemini-cli" = "latest"
 usage = "latest"

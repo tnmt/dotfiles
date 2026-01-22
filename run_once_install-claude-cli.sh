@@ -1,0 +1,26 @@
+#!/bin/bash
+
+# Install Claude CLI using the new native installation method
+set -e
+
+echo "Installing Claude CLI..."
+
+# Check if Claude CLI is already installed
+if command -v claude &> /dev/null; then
+    echo "Claude CLI is already installed. Version: $(claude --version)"
+    exit 0
+fi
+
+# Install Claude CLI using the official installation script
+curl -fsSL https://claude.ai/install.sh | bash
+
+# Verify installation
+if command -v claude &> /dev/null; then
+    echo "Claude CLI installation completed successfully!"
+    echo "Version: $(claude --version)"
+else
+    echo "Error: Claude CLI installation failed or not found in PATH"
+    exit 1
+fi
+
+echo "Claude CLI is ready to use. Run 'claude --help' for usage information."

@@ -5,45 +5,16 @@ return {
     "nvim-treesitter/nvim-treesitter",
     build = ":TSUpdate",
     event = { "BufReadPost", "BufNewFile" },
-    dependencies = {
-      "nvim-treesitter/nvim-treesitter-textobjects",
-    },
-    opts = {
-      ensure_installed = {
-        "bash",
-        "c",
-        "diff",
-        "go",
-        "html",
-        "javascript",
-        "json",
-        "lua",
-        "markdown",
-        "markdown_inline",
-        "python",
-        "query",
-        "regex",
-        "ruby",
-        "toml",
-        "tsx",
-        "typescript",
-        "vim",
-        "yaml",
-      },
-      highlight = { enable = true },
-      indent = { enable = true },
-      incremental_selection = {
-        enable = true,
-        keymaps = {
-          init_selection = "<C-space>",
-          node_incremental = "<C-space>",
-          scope_incremental = false,
-          node_decremental = "<bs>",
-        },
-      },
-    },
-    config = function(_, opts)
-      require("nvim-treesitter.configs").setup(opts)
+    config = function()
+      -- Ensure parsers are installed
+      local parsers = {
+        "bash", "c", "diff", "go", "html", "javascript", "json", "lua",
+        "markdown", "markdown_inline", "python", "query", "regex", "ruby",
+        "toml", "tsx", "typescript", "vim", "yaml",
+      }
+      for _, parser in ipairs(parsers) do
+        pcall(vim.treesitter.language.add, parser)
+      end
     end,
   },
 

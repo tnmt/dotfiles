@@ -39,6 +39,7 @@ brew_os = "darwin"
 brew = "delta"
 apt = "git-delta"
 mode = "base"
+brew_os = "darwin"
 
 [tmux]
 brew = "tmux"

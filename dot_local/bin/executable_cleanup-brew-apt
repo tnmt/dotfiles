@@ -1,143 +1,138 @@
-#!/bin/bash
+#!/usr/bin/env python3
+"""
+Cleanup script - Uninstall brew packages that are installed via apt.
+Run periodically when migrating packages from brew to apt.
+"""
 
-# Cleanup script - Uninstall brew packages that are installed via apt
-# Run periodically when migrating packages from brew to apt
+import argparse
+import subprocess
+import sys
+import tomllib
+from pathlib import Path
 
-set -e
 
-# Packages that should be installed via apt on Linux (from run_once_install-packages.sh.tmpl)
-APT_PACKAGES=(
-    fzf
-    direnv
-    git
-    tmux
-    gh
-    ripgrep
-    eza
-    bat
-    zoxide
-    jq
-    yq
-    tig
-    gpg
-)
+def load_package_mapping() -> dict:
+    """Load package mapping from TOML file."""
+    mapping_file = Path.home() / ".config/packages/package-mapping.toml"
+    if not mapping_file.exists():
+        print(f"Warning: {mapping_file} not found, using empty mapping")
+        return {}
 
-DRY_RUN=false
-VERBOSE=false
+    with open(mapping_file, "rb") as f:
+        return tomllib.load(f)
 
-show_help() {
-    cat << EOF
-Cleanup brew packages that are installed via apt
 
-Usage: cleanup-brew-apt [OPTIONS]
+def is_apt_installed(package: str) -> bool:
+    """Check if package is installed via apt."""
+    result = subprocess.run(
+        ["dpkg", "-s", package],
+        capture_output=True,
+    )
+    return result.returncode == 0
 
-Options:
-    -n, --dry-run    Show what would be uninstalled without making changes
-    -v, --verbose    Show detailed output
-    -h, --help       Show this help message
 
-This script checks for packages that are installed both via apt and homebrew,
-and uninstalls them from homebrew to avoid duplication.
+def is_brew_installed(package: str) -> bool:
+    """Check if package is installed via brew."""
+    result = subprocess.run(
+        ["brew", "list", package],
+        capture_output=True,
+    )
+    return result.returncode == 0
 
-Packages checked: ${APT_PACKAGES[*]}
-EOF
-}
 
-# Parse arguments
-while [[ $# -gt 0 ]]; do
-    case "$1" in
-        -n|--dry-run)
-            DRY_RUN=true
-            shift
-            ;;
-        -v|--verbose)
-            VERBOSE=true
-            shift
-            ;;
-        -h|--help)
-            show_help
-            exit 0
-            ;;
-        *)
-            echo "Unknown option: $1"
-            show_help
-            exit 1
-            ;;
-    esac
-done
+def uninstall_brew(package: str) -> bool:
+    """Uninstall package from brew."""
+    result = subprocess.run(
+        ["brew", "uninstall", package],
+        capture_output=True,
+    )
+    return result.returncode == 0
 
-# Check if we're on Linux
-if [[ "$(uname -s)" != "Linux" ]]; then
-    echo "This script is intended for Linux only"
-    exit 0
-fi
 
-# Check if apt and brew are available
-if ! command -v apt &> /dev/null; then
-    echo "apt not found"
-    exit 1
-fi
+def main():
+    parser = argparse.ArgumentParser(
+        description="Cleanup brew packages that are installed via apt"
+    )
+    parser.add_argument(
+        "-n", "--dry-run",
+        action="store_true",
+        help="Show what would be uninstalled without making changes"
+    )
+    parser.add_argument(
+        "-v", "--verbose",
+        action="store_true",
+        help="Show detailed output"
+    )
+    args = parser.parse_args()
 
-if ! command -v brew &> /dev/null; then
-    echo "brew not found, nothing to clean up"
-    exit 0
-fi
+    # Check if we're on Linux
+    import platform
+    if platform.system() != "Linux":
+        print("This script is intended for Linux only")
+        sys.exit(0)
 
-echo "Checking for brew packages that should be installed via apt..."
-echo ""
+    # Check if apt is available
+    if subprocess.run(["which", "apt"], capture_output=True).returncode != 0:
+        print("apt not found")
+        sys.exit(1)
 
-to_uninstall=()
+    # Check if brew is available
+    if subprocess.run(["which", "brew"], capture_output=True).returncode != 0:
+        print("brew not found, nothing to clean up")
+        sys.exit(0)
 
-for pkg in "${APT_PACKAGES[@]}"; do
-    apt_installed=false
-    brew_installed=false
+    # Load package mapping
+    mapping = load_package_mapping()
 
-    # Check if installed via apt
-    if dpkg -s "$pkg" &> /dev/null; then
-        apt_installed=true
-    fi
+    if not mapping:
+        print("No package mapping found")
+        sys.exit(1)
 
-    # Check if installed via brew
-    if brew list "$pkg" &> /dev/null; then
-        brew_installed=true
-    fi
+    print("Checking for brew packages that should be installed via apt...")
+    print()
 
-    if $VERBOSE; then
-        echo "$pkg: apt=$apt_installed, brew=$brew_installed"
-    fi
+    to_uninstall = []
 
-    # If both are installed, mark for uninstall from brew
-    if $apt_installed && $brew_installed; then
-        to_uninstall+=("$pkg")
-        echo "  [DUPLICATE] $pkg is installed via both apt and brew"
-    fi
-done
+    for name, pkg in mapping.items():
+        brew_name = pkg.get("brew", name)
+        apt_name = pkg.get("apt", name)
 
-echo ""
+        apt_installed = is_apt_installed(apt_name)
+        brew_installed = is_brew_installed(brew_name)
 
-if [[ ${#to_uninstall[@]} -eq 0 ]]; then
-    echo "No duplicates found. Nothing to clean up."
-    exit 0
-fi
+        if args.verbose:
+            print(f"{name}: apt({apt_name})={apt_installed}, brew({brew_name})={brew_installed}")
 
-echo "Found ${#to_uninstall[@]} duplicate(s): ${to_uninstall[*]}"
-echo ""
+        # If both are installed, mark for uninstall from brew
+        if apt_installed and brew_installed:
+            to_uninstall.append((name, brew_name, apt_name))
+            print(f"  [DUPLICATE] {name}: brew({brew_name}) and apt({apt_name})")
 
-if $DRY_RUN; then
-    echo "[DRY RUN] Would uninstall from brew:"
-    for pkg in "${to_uninstall[@]}"; do
-        echo "  brew uninstall $pkg"
-    done
-else
-    read -p "Uninstall these packages from brew? (y/N): " confirm
-    if [[ $confirm == "y" || $confirm == "Y" ]]; then
-        for pkg in "${to_uninstall[@]}"; do
-            echo "Uninstalling $pkg from brew..."
-            brew uninstall "$pkg" || echo "  Warning: Failed to uninstall $pkg"
-        done
-        echo ""
-        echo "Cleanup complete!"
-    else
-        echo "Cancelled"
-    fi
-fi
+    print()
+
+    if not to_uninstall:
+        print("No duplicates found. Nothing to clean up.")
+        sys.exit(0)
+
+    print(f"Found {len(to_uninstall)} duplicate(s)")
+    print()
+
+    if args.dry_run:
+        print("[DRY RUN] Would uninstall from brew:")
+        for name, brew_name, _ in to_uninstall:
+            print(f"  brew uninstall {brew_name}")
+    else:
+        confirm = input("Uninstall these packages from brew? (y/N): ")
+        if confirm.lower() == "y":
+            for name, brew_name, _ in to_uninstall:
+                print(f"Uninstalling {brew_name} from brew...")
+                if not uninstall_brew(brew_name):
+                    print(f"  Warning: Failed to uninstall {brew_name}")
+            print()
+            print("Cleanup complete!")
+        else:
+            print("Cancelled")
+
+
+if __name__ == "__main__":
+    main()

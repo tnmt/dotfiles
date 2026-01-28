@@ -1,0 +1,69 @@
+# Package name mapping between Homebrew and apt
+# Key is the canonical name (usually brew name)
+
+[delta]
+brew = "delta"
+apt = "git-delta"
+
+[bat]
+brew = "bat"
+apt = "bat"
+apt_cmd = "batcat"  # Command name differs on Ubuntu
+
+[fd]
+brew = "fd"
+apt = "fd-find"
+apt_cmd = "fdfind"
+
+# Packages with same name (for completeness)
+[fzf]
+brew = "fzf"
+apt = "fzf"
+
+[direnv]
+brew = "direnv"
+apt = "direnv"
+
+[git]
+brew = "git"
+apt = "git"
+
+[tmux]
+brew = "tmux"
+apt = "tmux"
+
+[gh]
+brew = "gh"
+apt = "gh"
+
+[ripgrep]
+brew = "ripgrep"
+apt = "ripgrep"
+
+[eza]
+brew = "eza"
+apt = "eza"
+
+[zoxide]
+brew = "zoxide"
+apt = "zoxide"
+
+[jq]
+brew = "jq"
+apt = "jq"
+
+[yq]
+brew = "yq"
+apt = "yq"
+
+[tig]
+brew = "tig"
+apt = "tig"
+
+[gpg]
+brew = "gpg"
+apt = "gpg"
+
+[neovim]
+brew = "neovim"
+apt = "neovim"

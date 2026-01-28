@@ -5,7 +5,7 @@ set -e
 
 OS="$(uname -s)"
 
-{{ if not .minimal -}}
+{{ if .development -}}
 # Install Homebrew if not installed
 if ! command -v brew &> /dev/null; then
     echo "Installing Homebrew..."
@@ -46,7 +46,7 @@ if command -v apt &> /dev/null; then
         yq \
         tig \
         gpg
-{{ if not .minimal }}
+{{ if .development }}
     # Build tools and development libraries (for mise/ruby-build etc.)
     sudo apt install -y \
         software-properties-common \
@@ -86,7 +86,7 @@ brew install --cask \
 {{ end -}}
 {{ end -}}
 
-{{ if not .minimal -}}
+{{ if .development -}}
 # Install mise (development tool version manager)
 if ! command -v mise &> /dev/null; then
     echo "Installing mise..."

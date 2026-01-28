@@ -2,11 +2,11 @@
 {{- $name := promptStringOnce . "name" "Full name" -}}
 {{- $hostname := .chezmoi.hostname -}}
 {{- $desktop := promptBoolOnce . "desktop" "Is this a desktop machine" -}}
-{{- $minimal := promptBoolOnce . "minimal" "Minimal setup (skip build-essential and mise)" -}}
+{{- $development := promptBoolOnce . "development" "Development environment (Homebrew, mise, nvim, etc.)" -}}
 
 [data]
     email = {{ $email | quote }}
     name = {{ $name | quote }}
     hostname = {{ $hostname | quote }}
     desktop = {{ $desktop }}
-    minimal = {{ $minimal }}
+    development = {{ $development }}

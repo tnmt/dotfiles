@@ -5,7 +5,7 @@
   name = {{ .name }}
 
 [core]
-{{- if .minimal }}
+{{- if not .development }}
   editor = vi
 {{- else }}
   editor = nvim

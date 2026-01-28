@@ -32,7 +32,6 @@ if command -v apt &> /dev/null; then
     echo "Installing Linux packages with apt..."
     sudo apt update
     sudo apt install -y \
-        software-properties-common \
         zsh \
         fzf \
         direnv \
@@ -50,6 +49,7 @@ if command -v apt &> /dev/null; then
 {{ if not .minimal }}
     # Build tools, fonts, and development libraries (for mise/ruby-build etc.)
     sudo apt install -y \
+        software-properties-common \
         build-essential \
         fonts-powerline \
         fonts-firacode \

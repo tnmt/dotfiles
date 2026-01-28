@@ -20,6 +20,8 @@ tnmtの開発環境を `chezmoi` で管理するための設定群です。XDG �
 
 2. **リポジトリを適用**  
    ```bash
+   export PATH=$PATH:$HOME/.local/bin/
+
    ## git
    chezmoi init git@github.com:tnmt/dotfiles.git
    chezmoi apply

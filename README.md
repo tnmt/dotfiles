@@ -4,7 +4,8 @@ tnmtの開発環境を `chezmoi` で管理するための設定群です。XDG �
 
 ## 主な内容
 
-- **シェル**: Zsh + Powerlevel10k、tmux ヘルパー (`dot_local/bin/executable_tm`)。
+- **シェル**: Zsh + Powerlevel10k、tmux ヘルパー (`tm`)。
+- **ユーティリティ**: `cleanup-brew-apt` - aptとbrewで重複インストールされたパッケージをbrewから削除。
 - **エディタ**: Neovim（lazy.nvim、mason、none-ls で LSP/formatter を管理）。
 - **パッケージ管理**: `dot_config/packages/brewfile` を `brew bundle` で適用。`run_onchange_brew-bundle.sh` で Brewfile 変更時に自動実行。
 - **ランタイム設定**: `run_once_setup-nvim.sh` などのセットアップスクリプト、`dot_zshenv` による XDG 変数設定。

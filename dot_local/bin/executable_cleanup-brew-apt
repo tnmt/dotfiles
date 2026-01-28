@@ -1,0 +1,143 @@
+#!/bin/bash
+
+# Cleanup script - Uninstall brew packages that are installed via apt
+# Run periodically when migrating packages from brew to apt
+
+set -e
+
+# Packages that should be installed via apt on Linux (from run_once_install-packages.sh.tmpl)
+APT_PACKAGES=(
+    fzf
+    direnv
+    git
+    tmux
+    gh
+    ripgrep
+    eza
+    bat
+    zoxide
+    jq
+    yq
+    tig
+    gpg
+)
+
+DRY_RUN=false
+VERBOSE=false
+
+show_help() {
+    cat << EOF
+Cleanup brew packages that are installed via apt
+
+Usage: cleanup-brew-apt [OPTIONS]
+
+Options:
+    -n, --dry-run    Show what would be uninstalled without making changes
+    -v, --verbose    Show detailed output
+    -h, --help       Show this help message
+
+This script checks for packages that are installed both via apt and homebrew,
+and uninstalls them from homebrew to avoid duplication.
+
+Packages checked: ${APT_PACKAGES[*]}
+EOF
+}
+
+# Parse arguments
+while [[ $# -gt 0 ]]; do
+    case "$1" in
+        -n|--dry-run)
+            DRY_RUN=true
+            shift
+            ;;
+        -v|--verbose)
+            VERBOSE=true
+            shift
+            ;;
+        -h|--help)
+            show_help
+            exit 0
+            ;;
+        *)
+            echo "Unknown option: $1"
+            show_help
+            exit 1
+            ;;
+    esac
+done
+
+# Check if we're on Linux
+if [[ "$(uname -s)" != "Linux" ]]; then
+    echo "This script is intended for Linux only"
+    exit 0
+fi
+
+# Check if apt and brew are available
+if ! command -v apt &> /dev/null; then
+    echo "apt not found"
+    exit 1
+fi
+
+if ! command -v brew &> /dev/null; then
+    echo "brew not found, nothing to clean up"
+    exit 0
+fi
+
+echo "Checking for brew packages that should be installed via apt..."
+echo ""
+
+to_uninstall=()
+
+for pkg in "${APT_PACKAGES[@]}"; do
+    apt_installed=false
+    brew_installed=false
+
+    # Check if installed via apt
+    if dpkg -s "$pkg" &> /dev/null; then
+        apt_installed=true
+    fi
+
+    # Check if installed via brew
+    if brew list "$pkg" &> /dev/null; then
+        brew_installed=true
+    fi
+
+    if $VERBOSE; then
+        echo "$pkg: apt=$apt_installed, brew=$brew_installed"
+    fi
+
+    # If both are installed, mark for uninstall from brew
+    if $apt_installed && $brew_installed; then
+        to_uninstall+=("$pkg")
+        echo "  [DUPLICATE] $pkg is installed via both apt and brew"
+    fi
+done
+
+echo ""
+
+if [[ ${#to_uninstall[@]} -eq 0 ]]; then
+    echo "No duplicates found. Nothing to clean up."
+    exit 0
+fi
+
+echo "Found ${#to_uninstall[@]} duplicate(s): ${to_uninstall[*]}"
+echo ""
+
+if $DRY_RUN; then
+    echo "[DRY RUN] Would uninstall from brew:"
+    for pkg in "${to_uninstall[@]}"; do
+        echo "  brew uninstall $pkg"
+    done
+else
+    read -p "Uninstall these packages from brew? (y/N): " confirm
+    if [[ $confirm == "y" || $confirm == "Y" ]]; then
+        for pkg in "${to_uninstall[@]}"; do
+            echo "Uninstalling $pkg from brew..."
+            brew uninstall "$pkg" || echo "  Warning: Failed to uninstall $pkg"
+        done
+        echo ""
+        echo "Cleanup complete!"
+    else
+        echo "Cancelled"
+    fi
+fi

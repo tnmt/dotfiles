@@ -113,7 +113,6 @@ mode = "development"
 
 [neovim]
 brew = "neovim"
-apt = "neovim"
 mode = "development"
 
 [luarocks]

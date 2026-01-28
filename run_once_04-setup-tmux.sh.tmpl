@@ -18,7 +18,7 @@ if ! command -v tmux &> /dev/null; then
     fi
 fi
 
-{{ if not .minimal -}}
+{{ if .desktop -}}
 # Install clipboard tools for tmux-yank
 echo "Installing clipboard utilities..."
 {{- if eq .chezmoi.os "darwin" }}

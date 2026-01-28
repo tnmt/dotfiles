@@ -15,13 +15,17 @@ tnmtの開発環境を `chezmoi` で管理するための設定群です。XDG �
 
 1. **chezmoi をインストール**  
    ```bash
-   brew install chezmoi   # Linuxbrew 環境を想定
+   sh -c "$(curl -fsLS get.chezmoi.io)" -- -b $HOME/.local/bin
    ```
 
 2. **リポジトリを適用**  
    ```bash
+   ## git
    chezmoi init git@github.com:tnmt/dotfiles.git
    chezmoi apply
+
+   ## https
+   chezmoi init tnmt
    ```
    初回実行時は `.chezmoi.toml.tmpl` のプロンプトで名前・メールアドレスなどを入力します。
 

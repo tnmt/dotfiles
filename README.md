@@ -5,10 +5,12 @@ tnmtの開発環境を `chezmoi` で管理するための設定群です。XDG �
 ## 主な内容
 
 - **シェル**: Zsh + Powerlevel10k、tmux ヘルパー (`tm`)。
-- **ユーティリティ**: `cleanup-brew-apt` - aptとbrewで重複インストールされたパッケージをbrewから削除。
 - **エディタ**: Neovim（lazy.nvim、mason、none-ls で LSP/formatter を管理）。
-- **パッケージ管理**: `dot_config/packages/brewfile` を `brew bundle` で適用。Brewfile 変更時に自動実行。
+- **パッケージ管理**: `package-mapping.toml` で apt/brew のパッケージ名を一元管理。brewfile と apt install リストを自動生成。
 - **ランタイム管理**: mise による Node, Python, Ruby, Go のバージョン管理。
+- **ユーティリティ**:
+  - `cleanup-brew-apt` - apt と brew で重複インストールされたパッケージを brew から削除 (Python)
+  - `tm` - tmux セッション管理ヘルパー
 - **Claude CLI**: 公式のnative版をインストール。
 
 ## セットアップモード
@@ -57,6 +59,31 @@ tnmtの開発環境を `chezmoi` で管理するための設定群です。XDG �
    - Claude CLI インストール
 
    Neovim 初回起動時に lazy.nvim がプラグインを同期します。
+
+## パッケージ管理
+
+`dot_config/packages/package-mapping.toml` でパッケージ名を一元管理しています:
+
+```toml
+[delta]
+brew = "delta"
+apt = "git-delta"
+mode = "base"
+
+[neovim]
+brew = "neovim"
+mode = "development"
+skip_cleanup = true  # cleanup-brew-apt の対象外
+```
+
+- **brew** / **apt**: 各パッケージマネージャでのパッケージ名
+- **mode**: `base` (常時), `development`, `desktop`
+- **brew_os**: `all` (デフォルト), `darwin` (macOS のみ brew)
+- **skip_cleanup**: `true` で cleanup-brew-apt から除外
+
+このファイルから以下が自動生成されます:
+- `brewfile` (brew bundle 用)
+- `run_once_01-install-packages.sh` 内の apt install リスト
 
 ## 1Password 連携
 

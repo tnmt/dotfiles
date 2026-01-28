@@ -86,20 +86,6 @@ elif command -v apt &>/dev/null; then
     sudo apt install -y fonts-powerline fonts-firacode unzip
     # Still need to install Nerd Font variants manually
     install_nerd_fonts
-elif command -v dnf &>/dev/null; then
-    echo "Installing system fonts with dnf..."
-    sudo dnf install -y powerline-fonts fira-code-fonts
-    # Still need to install Nerd Font variants manually
-    install_nerd_fonts
-elif command -v pacman &>/dev/null; then
-    echo "Installing fonts with pacman..."
-    sudo pacman -S --noconfirm ttf-fira-code powerline-fonts
-    # Install from AUR if yay is available
-    if command -v yay &>/dev/null; then
-        yay -S --noconfirm ttf-meslo-nerd-font-powerlevel10k
-    else
-        install_nerd_fonts
-    fi
 else
     echo "No package manager found, installing fonts manually..."
     install_nerd_fonts

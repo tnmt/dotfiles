@@ -53,8 +53,6 @@ if command -v brew &> /dev/null; then
     brew install ripgrep fd
 elif command -v apt &> /dev/null; then
     sudo apt install -y ripgrep fd-find
-elif command -v pacman &> /dev/null; then
-    sudo pacman -S --noconfirm ripgrep fd
 fi
 
 # Install formatters and linters

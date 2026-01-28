@@ -7,43 +7,56 @@ tnmtの開発環境を `chezmoi` で管理するための設定群です。XDG �
 - **シェル**: Zsh + Powerlevel10k、tmux ヘルパー (`tm`)。
 - **ユーティリティ**: `cleanup-brew-apt` - aptとbrewで重複インストールされたパッケージをbrewから削除。
 - **エディタ**: Neovim（lazy.nvim、mason、none-ls で LSP/formatter を管理）。
-- **パッケージ管理**: `dot_config/packages/brewfile` を `brew bundle` で適用。`run_onchange_brew-bundle.sh` で Brewfile 変更時に自動実行。
-- **ランタイム設定**: `run_once_setup-nvim.sh` などのセットアップスクリプト、`dot_zshenv` による XDG 変数設定。
-- **Claude CLI**: `run_once_install-claude-cli.sh` でnative版をインストール（旧npm版から移行）。
+- **パッケージ管理**: `dot_config/packages/brewfile` を `brew bundle` で適用。Brewfile 変更時に自動実行。
+- **ランタイム管理**: mise による Node, Python, Ruby, Go のバージョン管理。
+- **Claude CLI**: 公式のnative版をインストール。
+
+## セットアップモード
+
+初回実行時に以下を選択します:
+
+| desktop | development | 用途 |
+|---------|-------------|------|
+| true | true | フルデスクトップ開発環境 |
+| true | false | 軽量デスクトップ (開発ツールなし) |
+| false | true | 開発サーバー (headless + 開発ツール) |
+| false | false | 最小サーバー |
+
+- **desktop**: GUI関連 (フォント, デスクトップアプリ, xclip)
+- **development**: 開発ツール (Homebrew, mise, Neovim セットアップ, Claude CLI)
 
 ## セットアップ
 
-1. **chezmoi をインストール**  
+1. **chezmoi をインストール**
    ```bash
    sh -c "$(curl -fsLS get.chezmoi.io)" -- -b $HOME/.local/bin
    ```
 
-2. **リポジトリを適用**  
+2. **リポジトリを適用**
    ```bash
-   export PATH=$PATH:$HOME/.local/bin/
+   export PATH=$PATH:$HOME/.local/bin
 
-   ## git
-   chezmoi init git@github.com:tnmt/dotfiles.git
+   # SSH
+   chezmoi init --apply git@github.com:tnmt/dotfiles.git
 
-   ## https
-   chezmoi init tnmt
-
-   chezmoi apply
+   # または HTTPS
+   chezmoi init --apply tnmt
    ```
-   初回実行時は `.chezmoi.toml.tmpl` のプロンプトで名前・メールアドレスなどを入力します。
+   初回実行時にプロンプトで以下を入力します:
+   - Email address
+   - Full name
+   - Is this a desktop machine? (`desktop`)
+   - Development environment? (`development`)
 
-3. **Homebrew パッケージを導入**  
-   `chezmoi apply` 後、自動または手動で以下を実行します。
-   ```bash
-   brew bundle --file=$HOME/.config/packages/brewfile
-   ```
+3. **後続のセットアップ (development=true の場合)**
 
-4. **Neovim 初期化**
-   `run_once_setup-nvim.sh` により依存が導入されます。再実行を避けるために `~/.local/state/nvim/setup.done` を利用しています。
-   追加で `nvim` を起動し、lazy.nvim がプラグインを同期するのを待ちます。
+   `chezmoi apply` により以下が自動実行されます:
+   - Homebrew インストール & `brew bundle`
+   - mise によるランタイムインストール
+   - Neovim 依存パッケージのインストール
+   - Claude CLI インストール
 
-5. **Claude CLI インストール**
-   `run_once_install-claude-cli.sh` により公式のnative版Claude CLIが自動インストールされます。
+   Neovim 初回起動時に lazy.nvim がプラグインを同期します。
 
 ## 1Password 連携
 

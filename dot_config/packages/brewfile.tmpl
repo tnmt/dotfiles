@@ -22,7 +22,9 @@ brew "fd"
 brew "the_platinum_searcher"
 brew "rg"
 brew "ghq"
+{{- if eq .chezmoi.os "darwin" }}
 brew "zoxide"
+{{- end }}
 
 # System tools
 {{- if eq .chezmoi.os "darwin" }}

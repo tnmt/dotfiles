@@ -16,11 +16,15 @@ brew "gpg"
 brew "bat"
 {{- end }}
 brew "delta"
+{{- if not .minimal }}
 brew "neovim"
 brew "luarocks"
+{{- end }}
 brew "fd"
 brew "the_platinum_searcher"
+{{- if not .minimal }}
 brew "ghq"
+{{- end }}
 {{- if eq .chezmoi.os "darwin" }}
 brew "zoxide"
 {{- end }}

@@ -1,3 +1,4 @@
+{{ if not .minimal -}}
 #!/bin/bash
 
 # Install Claude CLI using the new native installation method
@@ -24,3 +25,4 @@ else
 fi
 
 echo "Claude CLI is ready to use. Run 'claude --help' for usage information."
+{{ end -}}

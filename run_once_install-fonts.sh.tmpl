@@ -1,3 +1,4 @@
+{{ if not .minimal -}}
 #!/bin/bash
 
 # Install fonts for terminal
@@ -98,3 +99,4 @@ echo "  - MesloLGS Nerd Font (best for Powerlevel10k)"
 echo "  - FiraCode Nerd Font (good ligatures support)"
 echo ""
 echo "You may need to restart your terminal and select the font in preferences."
+{{ end -}}

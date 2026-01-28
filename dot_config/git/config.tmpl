@@ -5,7 +5,11 @@
   name = {{ .name }}
 
 [core]
+{{- if .minimal }}
+  editor = vi
+{{- else }}
   editor = nvim
+{{- end }}
   excludesfile = ~/.config/git/ignore
 
 [push]

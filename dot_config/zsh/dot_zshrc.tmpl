@@ -166,17 +166,23 @@ alias info="info --vi-keys"
 alias g="git"
 alias be="bundle exec"
 alias td="mkdir -p ~/tmp/$(date '+%Y%m%d-%H%M') && cd ~/tmp/$(date '+%Y%m%d-%H%M')"
+{{ if not .minimal -}}
 alias rcd='cd $(ghq list -p | peco)'
+{{ end -}}
+{{ if not .minimal -}}
 alias vi=nvim
 alias vim=nvim
+{{ end -}}
 
 fpath=(~/.config/zsh/completions $fpath)
 
 autoload -Uz compinit
 compinit
 
-# *brew
-eval "$(direnv hook zsh)"
+# direnv
+if command -v direnv &> /dev/null; then
+    eval "$(direnv hook zsh)"
+fi
 
 # Prompt configuration
 # Choose one: Powerlevel10k (p10k) or Starship

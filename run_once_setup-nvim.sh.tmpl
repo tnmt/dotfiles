@@ -1,3 +1,4 @@
+{{ if not .minimal -}}
 #!/bin/bash
 
 # Setup Neovim
@@ -74,3 +75,4 @@ echo "Run 'nvim' and lazy.nvim will automatically install plugins on first launc
 
 mkdir -p "$(dirname "$STATE_FILE")"
 touch "$STATE_FILE"
+{{ end -}}

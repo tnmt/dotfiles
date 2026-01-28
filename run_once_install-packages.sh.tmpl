@@ -30,7 +30,6 @@ if command -v apt &> /dev/null; then
     echo "Installing Linux packages with apt..."
     sudo apt update
     sudo apt install -y \
-        build-essential \
         software-properties-common \
         zsh \
         fzf \
@@ -45,7 +44,11 @@ if command -v apt &> /dev/null; then
         jq \
         yq \
         tig \
-        gpg \
+        gpg
+{{ if not .minimal }}
+    # Build tools, fonts, and development libraries (for mise/ruby-build etc.)
+    sudo apt install -y \
+        build-essential \
         fonts-powerline \
         fonts-firacode \
         zlib1g-dev \
@@ -53,6 +56,7 @@ if command -v apt &> /dev/null; then
         libyaml-dev \
         libreadline-dev \
         libssl-dev
+{{ end -}}
 fi
 {{ end -}}
 
@@ -92,7 +96,7 @@ if command -v mise &> /dev/null; then
         mise install
     else
         cat >"$HOME/.config/mise/config.toml" <<'EOF'
-{{ includeTemplate "dot_config/mise/config.toml" . -}}
+{{ includeTemplate "dot_config/mise/config.toml.tmpl" . -}}
 EOF
         mise install
     fi

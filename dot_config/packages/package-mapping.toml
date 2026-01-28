@@ -183,11 +183,6 @@ brew = "wget"
 mode = "development"
 brew_os = "darwin"
 
-[curl]
-brew = "curl"
-mode = "development"
-brew_os = "darwin"
-
 [envchain]
 brew = "envchain"
 mode = "development"

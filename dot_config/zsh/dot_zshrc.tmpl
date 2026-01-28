@@ -61,7 +61,9 @@ zinit ice depth=1
 zinit light romkatv/powerlevel10k
 zinit light zdharma-continuum/history-search-multi-word
 zinit light mollifier/anyframe
+{{ if not .minimal -}}
 zinit light Dbz/kube-aliases
+{{ end -}}
 
 # Ctrl+x -> b
 # peco でディレクトリの移動履歴を表示

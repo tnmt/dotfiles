@@ -18,6 +18,7 @@ if ! command -v tmux &> /dev/null; then
     fi
 fi
 
+{{ if not .minimal -}}
 # Install clipboard tools for tmux-yank
 echo "Installing clipboard utilities..."
 {{- if eq .chezmoi.os "darwin" }}
@@ -31,6 +32,7 @@ if ! command -v xclip &> /dev/null && ! command -v xsel &> /dev/null; then
     fi
 fi
 {{- end }}
+{{ end -}}
 
 # Install TPM (Tmux Plugin Manager)
 TPM_DIR="$HOME/.tmux/plugins/tpm"

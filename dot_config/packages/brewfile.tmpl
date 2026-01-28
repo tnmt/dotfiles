@@ -1,53 +1,26 @@
 {{ if .development -}}
+{{- $pkgMapping := include "dot_config/packages/package-mapping.toml" | fromToml -}}
 # Homebrew package list (for brew bundle)
 # Install with: brew bundle --file=~/.config/packages/brewfile
+# Generated from package-mapping.toml
 
-# Development tools
-{{- if eq .chezmoi.os "darwin" }}
-brew "git"
-brew "tmux"
-brew "fzf"
-brew "gh"
-brew "ripgrep"
-brew "eza"
-brew "jq"
-brew "yq"
-brew "tig"
-brew "gpg"
-brew "bat"
+# Packages for all OS
+{{- range $name, $pkg := $pkgMapping }}
+{{- if hasKey $pkg "brew" }}
+{{- if or (not (hasKey $pkg "brew_os")) (eq $pkg.brew_os "all") }}
+brew "{{ $pkg.brew }}"
 {{- end }}
-brew "delta"
-brew "neovim"
-brew "luarocks"
-brew "fd"
-brew "the_platinum_searcher"
-brew "ghq"
-{{- if eq .chezmoi.os "darwin" }}
-brew "zoxide"
+{{- end }}
 {{- end }}
 
-# System tools
+# macOS-only packages
 {{- if eq .chezmoi.os "darwin" }}
-brew "htop"
-brew "ncdu"
-brew "tree"
-brew "wget"
-brew "curl"
-brew "envchain"
-brew "direnv"
+{{- range $name, $pkg := $pkgMapping }}
+{{- if hasKey $pkg "brew" }}
+{{- if and (hasKey $pkg "brew_os") (eq $pkg.brew_os "darwin") }}
+brew "{{ $pkg.brew }}"
 {{- end }}
-
-# Container tools (macOS only; install from package manager on Linux)
-{{- if eq .chezmoi.os "darwin" }}
-brew "docker"
-brew "docker-compose"
-brew "colima"
 {{- end }}
-
-# Cloud tools
-{{- if eq .chezmoi.os "darwin" }}
-brew "awscli"
 {{- end }}
-brew "kubectl"
-brew "helm"
+{{- end }}
 {{ end -}}

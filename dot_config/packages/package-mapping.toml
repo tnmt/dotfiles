@@ -2,12 +2,17 @@
 # Key is the canonical name (usually brew name)
 #
 # Fields:
-#   brew     - Homebrew package name (optional, defaults to key)
-#   apt      - apt package name (optional, defaults to key)
-#   apt_cmd  - Command name on apt if different from package name
-#   mode     - Installation mode: "base", "development", "desktop"
+#   brew      - Homebrew package name (optional, defaults to key)
+#   apt       - apt package name (optional, omit if no apt package)
+#   apt_cmd   - Command name on apt if different from package name
+#   mode      - Installation mode: "base", "development", "desktop"
+#   brew_os   - OS for brew install: "all", "darwin", "linux" (default: "all")
+#               "darwin" means brew only on macOS (Linux uses apt)
 
-# Base packages (always installed)
+# =============================================================================
+# Base packages
+# =============================================================================
+
 [zsh]
 apt = "zsh"
 mode = "base"
@@ -16,16 +21,19 @@ mode = "base"
 brew = "fzf"
 apt = "fzf"
 mode = "base"
+brew_os = "darwin"
 
 [direnv]
 brew = "direnv"
 apt = "direnv"
 mode = "base"
+brew_os = "darwin"
 
 [git]
 brew = "git"
 apt = "git"
 mode = "base"
+brew_os = "darwin"
 
 [delta]
 brew = "delta"
@@ -36,54 +44,67 @@ mode = "base"
 brew = "tmux"
 apt = "tmux"
 mode = "base"
+brew_os = "darwin"
 
 [gh]
 brew = "gh"
 apt = "gh"
 mode = "base"
+brew_os = "darwin"
 
 [ripgrep]
 brew = "ripgrep"
 apt = "ripgrep"
 mode = "base"
+brew_os = "darwin"
 
 [eza]
 brew = "eza"
 apt = "eza"
 mode = "base"
+brew_os = "darwin"
 
 [bat]
 brew = "bat"
 apt = "bat"
 apt_cmd = "batcat"
 mode = "base"
+brew_os = "darwin"
 
 [zoxide]
 brew = "zoxide"
 apt = "zoxide"
 mode = "base"
+brew_os = "darwin"
 
 [jq]
 brew = "jq"
 apt = "jq"
 mode = "base"
+brew_os = "darwin"
 
 [yq]
 brew = "yq"
 apt = "yq"
 mode = "base"
+brew_os = "darwin"
 
 [tig]
 brew = "tig"
 apt = "tig"
 mode = "base"
+brew_os = "darwin"
 
 [gpg]
 brew = "gpg"
 apt = "gpg"
 mode = "base"
+brew_os = "darwin"
 
+# =============================================================================
 # Development packages
+# =============================================================================
+
 [fd]
 brew = "fd"
 apt = "fd-find"
@@ -95,6 +116,19 @@ brew = "neovim"
 apt = "neovim"
 mode = "development"
 
+[luarocks]
+brew = "luarocks"
+mode = "development"
+
+[the_platinum_searcher]
+brew = "the_platinum_searcher"
+mode = "development"
+
+[ghq]
+brew = "ghq"
+mode = "development"
+
+# Build tools (apt only)
 [software-properties-common]
 apt = "software-properties-common"
 mode = "development"
@@ -123,7 +157,80 @@ mode = "development"
 apt = "libssl-dev"
 mode = "development"
 
+# =============================================================================
+# macOS system tools (darwin only)
+# =============================================================================
+
+[htop]
+brew = "htop"
+mode = "development"
+brew_os = "darwin"
+
+[ncdu]
+brew = "ncdu"
+mode = "development"
+brew_os = "darwin"
+
+[tree]
+brew = "tree"
+mode = "development"
+brew_os = "darwin"
+
+[wget]
+brew = "wget"
+mode = "development"
+brew_os = "darwin"
+
+[curl]
+brew = "curl"
+mode = "development"
+brew_os = "darwin"
+
+[envchain]
+brew = "envchain"
+mode = "development"
+brew_os = "darwin"
+
+# =============================================================================
+# Container tools (darwin only)
+# =============================================================================
+
+[docker]
+brew = "docker"
+mode = "development"
+brew_os = "darwin"
+
+[docker-compose]
+brew = "docker-compose"
+mode = "development"
+brew_os = "darwin"
+
+[colima]
+brew = "colima"
+mode = "development"
+brew_os = "darwin"
+
+# =============================================================================
+# Cloud tools
+# =============================================================================
+
+[awscli]
+brew = "awscli"
+mode = "development"
+brew_os = "darwin"
+
+[kubectl]
+brew = "kubectl"
+mode = "development"
+
+[helm]
+brew = "helm"
+mode = "development"
+
+# =============================================================================
 # Desktop packages
+# =============================================================================
+
 [fonts-powerline]
 apt = "fonts-powerline"
 mode = "desktop"

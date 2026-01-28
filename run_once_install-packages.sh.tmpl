@@ -47,17 +47,21 @@ if command -v apt &> /dev/null; then
         tig \
         gpg
 {{ if not .minimal }}
-    # Build tools, fonts, and development libraries (for mise/ruby-build etc.)
+    # Build tools and development libraries (for mise/ruby-build etc.)
     sudo apt install -y \
         software-properties-common \
         build-essential \
-        fonts-powerline \
-        fonts-firacode \
         zlib1g-dev \
         libffi-dev \
         libyaml-dev \
         libreadline-dev \
         libssl-dev
+{{ end -}}
+{{ if .desktop }}
+    # Desktop fonts
+    sudo apt install -y \
+        fonts-powerline \
+        fonts-firacode
 {{ end -}}
 fi
 {{ end -}}

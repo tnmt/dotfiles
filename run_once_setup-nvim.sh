@@ -14,19 +14,13 @@ echo "Setting up Neovim..."
 # Create backup directory for vim
 mkdir -p ~/.vimbackup
 
-# Install Neovim if not installed
+# Install Neovim if not installed (always use brew for latest version)
 if ! command -v nvim &> /dev/null; then
     echo "Installing Neovim..."
     if command -v brew &> /dev/null; then
         brew install neovim
-    elif command -v apt &> /dev/null; then
-        sudo apt update && sudo apt install -y neovim
-    elif command -v dnf &> /dev/null; then
-        sudo dnf install -y neovim
-    elif command -v pacman &> /dev/null; then
-        sudo pacman -S --noconfirm neovim
     else
-        echo "Please install Neovim manually"
+        echo "Please install Homebrew first, then run: brew install neovim"
         exit 1
     fi
 fi

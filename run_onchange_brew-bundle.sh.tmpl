@@ -1,3 +1,4 @@
+{{ if not .minimal -}}
 #!/bin/sh
 set -e
 
@@ -7,3 +8,4 @@ BREWFILE="$HOME/.config/packages/brewfile"
 if [ -x "$(command -v brew)" ] && [ -f "$BREWFILE" ]; then
   brew bundle --file="$BREWFILE"
 fi
+{{ end -}}

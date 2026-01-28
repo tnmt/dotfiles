@@ -5,6 +5,7 @@ set -e
 
 OS="$(uname -s)"
 
+{{ if not .minimal -}}
 # Install Homebrew if not installed
 if ! command -v brew &> /dev/null; then
     echo "Installing Homebrew..."
@@ -22,6 +23,7 @@ if command -v brew &> /dev/null; then
     echo "Installing packages with Homebrew..."
     brew bundle --file=~/.config/packages/brewfile
 fi
+{{ end -}}
 
 
 # Linux-specific packages (using native package manager)
@@ -80,6 +82,7 @@ brew install --cask \
 {{ end -}}
 {{ end -}}
 
+{{ if not .minimal -}}
 # Install mise (development tool version manager)
 if ! command -v mise &> /dev/null; then
     echo "Installing mise..."
@@ -101,5 +104,6 @@ EOF
         mise install
     fi
 fi
+{{ end -}}
 
 echo "Package installation completed!"

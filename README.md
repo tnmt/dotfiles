@@ -24,10 +24,11 @@ tnmtの開発環境を `chezmoi` で管理するための設定群です。XDG �
 
    ## git
    chezmoi init git@github.com:tnmt/dotfiles.git
-   chezmoi apply
 
    ## https
    chezmoi init tnmt
+
+   chezmoi apply
    ```
    初回実行時は `.chezmoi.toml.tmpl` のプロンプトで名前・メールアドレスなどを入力します。
 

@@ -5,6 +5,8 @@ set -e
 
 OS="$(uname -s)"
 
+{{- $pkgMapping := include "dot_config/packages/package-mapping.toml" | fromToml }}
+
 {{ if .development -}}
 # Install Homebrew if not installed
 if ! command -v brew &> /dev/null; then
@@ -31,38 +33,36 @@ fi
 if command -v apt &> /dev/null; then
     echo "Installing Linux packages with apt..."
     sudo apt update
+
+    # Base packages
     sudo apt install -y \
-        zsh \
-        fzf \
-        direnv \
-        git \
-        git-delta \
-        tmux \
-        gh \
-        ripgrep \
-        eza \
-        bat \
-        zoxide \
-        jq \
-        yq \
-        tig \
-        gpg
+{{- range $name, $pkg := $pkgMapping }}
+{{- if eq $pkg.mode "base" }}
+        {{ $pkg.apt }} \
+{{- end }}
+{{- end }}
+        # end of base packages
+
 {{ if .development }}
     # Build tools and development libraries (for mise/ruby-build etc.)
     sudo apt install -y \
-        software-properties-common \
-        build-essential \
-        zlib1g-dev \
-        libffi-dev \
-        libyaml-dev \
-        libreadline-dev \
-        libssl-dev
+{{- range $name, $pkg := $pkgMapping }}
+{{- if eq $pkg.mode "development" }}
+        {{ $pkg.apt }} \
+{{- end }}
+{{- end }}
+        # end of development packages
 {{ end -}}
+
 {{ if .desktop }}
     # Desktop fonts
     sudo apt install -y \
-        fonts-powerline \
-        fonts-firacode
+{{- range $name, $pkg := $pkgMapping }}
+{{- if eq $pkg.mode "desktop" }}
+        {{ $pkg.apt }} \
+{{- end }}
+{{- end }}
+        # end of desktop packages
 {{ end -}}
 fi
 {{ end -}}

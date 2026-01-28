@@ -1,69 +1,133 @@
 # Package name mapping between Homebrew and apt
 # Key is the canonical name (usually brew name)
+#
+# Fields:
+#   brew     - Homebrew package name (optional, defaults to key)
+#   apt      - apt package name (optional, defaults to key)
+#   apt_cmd  - Command name on apt if different from package name
+#   mode     - Installation mode: "base", "development", "desktop"
 
-[delta]
-brew = "delta"
-apt = "git-delta"
+# Base packages (always installed)
+[zsh]
+apt = "zsh"
+mode = "base"
 
-[bat]
-brew = "bat"
-apt = "bat"
-apt_cmd = "batcat"  # Command name differs on Ubuntu
-
-[fd]
-brew = "fd"
-apt = "fd-find"
-apt_cmd = "fdfind"
-
-# Packages with same name (for completeness)
 [fzf]
 brew = "fzf"
 apt = "fzf"
+mode = "base"
 
 [direnv]
 brew = "direnv"
 apt = "direnv"
+mode = "base"
 
 [git]
 brew = "git"
 apt = "git"
+mode = "base"
+
+[delta]
+brew = "delta"
+apt = "git-delta"
+mode = "base"
 
 [tmux]
 brew = "tmux"
 apt = "tmux"
+mode = "base"
 
 [gh]
 brew = "gh"
 apt = "gh"
+mode = "base"
 
 [ripgrep]
 brew = "ripgrep"
 apt = "ripgrep"
+mode = "base"
 
 [eza]
 brew = "eza"
 apt = "eza"
+mode = "base"
+
+[bat]
+brew = "bat"
+apt = "bat"
+apt_cmd = "batcat"
+mode = "base"
 
 [zoxide]
 brew = "zoxide"
 apt = "zoxide"
+mode = "base"
 
 [jq]
 brew = "jq"
 apt = "jq"
+mode = "base"
 
 [yq]
 brew = "yq"
 apt = "yq"
+mode = "base"
 
 [tig]
 brew = "tig"
 apt = "tig"
+mode = "base"
 
 [gpg]
 brew = "gpg"
 apt = "gpg"
+mode = "base"
+
+# Development packages
+[fd]
+brew = "fd"
+apt = "fd-find"
+apt_cmd = "fdfind"
+mode = "development"
 
 [neovim]
 brew = "neovim"
 apt = "neovim"
+mode = "development"
+
+[software-properties-common]
+apt = "software-properties-common"
+mode = "development"
+
+[build-essential]
+apt = "build-essential"
+mode = "development"
+
+[zlib1g-dev]
+apt = "zlib1g-dev"
+mode = "development"
+
+[libffi-dev]
+apt = "libffi-dev"
+mode = "development"
+
+[libyaml-dev]
+apt = "libyaml-dev"
+mode = "development"
+
+[libreadline-dev]
+apt = "libreadline-dev"
+mode = "development"
+
+[libssl-dev]
+apt = "libssl-dev"
+mode = "development"
+
+# Desktop packages
+[fonts-powerline]
+apt = "fonts-powerline"
+mode = "desktop"
+
+[fonts-firacode]
+apt = "fonts-firacode"
+mode = "desktop"

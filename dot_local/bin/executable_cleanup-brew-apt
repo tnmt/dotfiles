@@ -94,6 +94,12 @@ def main():
     to_uninstall = []
 
     for name, pkg in mapping.items():
+        # Skip packages marked for exclusion
+        if pkg.get("skip_cleanup"):
+            if args.verbose:
+                print(f"{name}: skipped (skip_cleanup=true)")
+            continue
+
         brew_name = pkg.get("brew", name)
         apt_name = pkg.get("apt", name)
 

@@ -114,6 +114,7 @@ mode = "development"
 [neovim]
 brew = "neovim"
 mode = "development"
+skip_cleanup = true  # Always use brew version
 
 [luarocks]
 brew = "luarocks"

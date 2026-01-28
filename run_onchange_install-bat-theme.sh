@@ -2,8 +2,13 @@
 
 set -eu
 
-if ! command -v bat >/dev/null 2>&1; then
-	printf 'bat not found, skipping theme install\n' >&2
+# Support both bat and batcat (Ubuntu names it batcat)
+if command -v bat >/dev/null 2>&1; then
+	BAT_CMD="bat"
+elif command -v batcat >/dev/null 2>&1; then
+	BAT_CMD="batcat"
+else
+	printf 'bat/batcat not found, skipping theme install\n' >&2
 	exit 0
 fi
 
@@ -11,7 +16,7 @@ REPO='https://github.com/folke/tokyonight.nvim.git'
 REPO_NAME='tokyonight.nvim/'
 THEME_DIR='extras/sublime/'
 
-BAT_THEMES_DIR="$(command bat --config-dir)/themes"
+BAT_THEMES_DIR="$(command $BAT_CMD --config-dir)/themes"
 [ ! -d "$BAT_THEMES_DIR" ] && mkdir -p "$BAT_THEMES_DIR"
 
 cd "$BAT_THEMES_DIR"
@@ -30,8 +35,8 @@ else
 fi
 
 # Revalidate bat cache with mtime
-BAT_THEME_CACHE="$(command bat --cache-dir)/themes.bin"
+BAT_THEME_CACHE="$(command $BAT_CMD --cache-dir)/themes.bin"
 if [ ! -e "$BAT_THEME_CACHE" ] \
 || [ -n "$(find "$BAT_THEMES_DIR" -name '*.tmTheme' -newer "$BAT_THEME_CACHE")" ]; then
-	command bat cache --build
+	command $BAT_CMD cache --build
 fi

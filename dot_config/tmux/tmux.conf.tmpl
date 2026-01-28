@@ -73,8 +73,8 @@ bind -r C-n next-window
 # Status Bar
 # =====================
 
-# Update status bar more frequently
-set -g status-interval 1
+# Update status bar interval (higher value reduces git operation conflicts)
+set -g status-interval 10
 
 # Center window list
 set -g status-justify centre

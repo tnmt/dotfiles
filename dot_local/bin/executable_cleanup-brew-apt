@@ -22,22 +22,28 @@ def load_package_mapping() -> dict:
         return tomllib.load(f)
 
 
-def is_apt_installed(package: str) -> bool:
-    """Check if package is installed via apt."""
+def get_apt_installed_packages() -> set[str]:
+    """Get all installed apt packages (fast, single call)."""
     result = subprocess.run(
-        ["dpkg", "-s", package],
+        ["dpkg-query", "-W", "-f=${Package}\n"],
         capture_output=True,
+        text=True,
     )
-    return result.returncode == 0
+    if result.returncode != 0:
+        return set()
+    return set(result.stdout.strip().split("\n"))
 
 
-def is_brew_installed(package: str) -> bool:
-    """Check if package is installed via brew."""
+def get_brew_installed_packages() -> set[str]:
+    """Get all installed brew packages (fast, single call)."""
     result = subprocess.run(
-        ["brew", "list", package],
+        ["brew", "list", "--formula", "-1"],
         capture_output=True,
+        text=True,
     )
-    return result.returncode == 0
+    if result.returncode != 0:
+        return set()
+    return set(result.stdout.strip().split("\n"))
 
 
 def uninstall_brew(package: str) -> bool:
@@ -89,6 +95,14 @@ def main():
         sys.exit(1)
 
     print("Checking for brew packages that should be installed via apt...")
+
+    # Get all installed packages at once (fast)
+    apt_packages = get_apt_installed_packages()
+    brew_packages = get_brew_installed_packages()
+
+    if args.verbose:
+        print(f"  apt packages: {len(apt_packages)}")
+        print(f"  brew packages: {len(brew_packages)}")
     print()
 
     to_uninstall = []
@@ -103,8 +117,8 @@ def main():
         brew_name = pkg.get("brew", name)
         apt_name = pkg.get("apt", name)
 
-        apt_installed = is_apt_installed(apt_name)
-        brew_installed = is_brew_installed(brew_name)
+        apt_installed = apt_name in apt_packages
+        brew_installed = brew_name in brew_packages
 
         if args.verbose:
             print(f"{name}: apt({apt_name})={apt_installed}, brew({brew_name})={brew_installed}")

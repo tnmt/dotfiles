@@ -228,6 +228,10 @@ mode = "development"
 brew = "terraform"
 mode = "development"
 
+[hugo]
+brew = "hugo"
+mode = "development"
+
 # =============================================================================
 # Desktop packages
 # =============================================================================

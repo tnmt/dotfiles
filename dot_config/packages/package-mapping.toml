@@ -224,6 +224,10 @@ mode = "development"
 brew = "helm"
 mode = "development"
 
+[terraform]
+brew = "terraform"
+mode = "development"
+
 # =============================================================================
 # Desktop packages
 # =============================================================================

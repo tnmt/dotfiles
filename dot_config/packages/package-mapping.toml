@@ -130,6 +130,12 @@ mode = "development"
 brew = "ghq"
 mode = "development"
 
+[hub]
+brew = "hub"
+apt = "hub"
+mode = "development"
+brew_os = "darwin"
+
 # Build tools (apt only)
 [software-properties-common]
 apt = "software-properties-common"

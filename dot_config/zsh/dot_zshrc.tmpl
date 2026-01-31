@@ -60,25 +60,47 @@ zinit light chrissicool/zsh-256color
 zinit ice depth=1
 zinit light romkatv/powerlevel10k
 zinit light zdharma-continuum/history-search-multi-word
-zinit light mollifier/anyframe
 {{ if .development -}}
 zinit light Dbz/kube-aliases
 {{ end -}}
 
-# Ctrl+x -> b
-# peco でディレクトリの移動履歴を表示
-bindkey '^xb' anyframe-widget-cdr
+# fzf でディレクトリの移動履歴を表示 (Ctrl+x b)
+function fzf-cdr() {
+  local dest=$(cdr -l | sed 's/^[^ ]* *//' | fzf --query "$LBUFFER")
+  if [ -n "$dest" ]; then
+    BUFFER="cd ${dest}"
+    zle accept-line
+  fi
+  zle reset-prompt
+}
+zle -N fzf-cdr
+bindkey '^xb' fzf-cdr
 autoload -Uz chpwd_recent_dirs cdr add-zsh-hook
 add-zsh-hook chpwd chpwd_recent_dirs
-# Ctrl+x -> r
-# peco でコマンドの実行履歴を表示
-bindkey '^xr' anyframe-widget-execute-history
-# Ctrl+x -> Ctrl+b
-# peco でGitブランチを表示して切替え
-bindkey '^x^b' anyframe-widget-checkout-git-branch
-# Ctrl+x -> g
-# GHQでクローンしたGitリポジトリを表示
-bindkey '^]' anyframe-widget-cd-ghq-repository
+
+# fzf でGitブランチを表示して切替え (Ctrl+x Ctrl+b)
+function fzf-checkout-git-branch() {
+  local branch=$(git branch | sed 's/^[* ]*//' | fzf --query "$LBUFFER")
+  if [ -n "$branch" ]; then
+    BUFFER="git checkout ${branch}"
+    zle accept-line
+  fi
+  zle reset-prompt
+}
+zle -N fzf-checkout-git-branch
+bindkey '^x^b' fzf-checkout-git-branch
+
+# fzf でGHQリポジトリへ移動 (Ctrl+])
+function fzf-cd-ghq-repository() {
+  local dest=$(ghq list -p | fzf --query "$LBUFFER")
+  if [ -n "$dest" ]; then
+    BUFFER="cd ${dest}"
+    zle accept-line
+  fi
+  zle reset-prompt
+}
+zle -N fzf-cd-ghq-repository
+bindkey '^]' fzf-cd-ghq-repository
 
 # Emacs style key binding
 bindkey -e
@@ -173,7 +195,7 @@ alias g="git"
 alias be="bundle exec"
 alias td="mkdir -p ~/tmp/$(date '+%Y%m%d-%H%M') && cd ~/tmp/$(date '+%Y%m%d-%H%M')"
 {{ if .development -}}
-alias rcd='cd $(ghq list -p | peco)'
+alias rcd='cd $(ghq list -p | fzf)'
 {{ end -}}
 {{ if .development -}}
 alias vi=nvim

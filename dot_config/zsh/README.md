@@ -86,7 +86,6 @@ p10k configure
 - **powerlevel10k**: プロンプトテーマ（デフォルト）
 - **zsh-z**: ディレクトリジャンプ（`j`コマンド）
 - **history-search-multi-word**: 高度な履歴検索
-- **anyframe**: pecoを使った各種セレクター
 - **kube-aliases**: Kubernetes用のエイリアス
 
 ## エイリアス
@@ -108,11 +107,11 @@ p10k configure
 
 ## キーバインド
 
-### Anyframe（pecoを使ったセレクター）
+### fzfセレクター
 - `Ctrl+x b` - ディレクトリ移動履歴を表示
-- `Ctrl+x r` - コマンド実行履歴を表示
 - `Ctrl+x Ctrl+b` - Gitブランチ切り替え
 - `Ctrl+]` - GHQリポジトリへジャンプ
+- `Ctrl+r` - コマンド実行履歴を表示（fzf標準）
 
 ## バージョンマネージャー
 

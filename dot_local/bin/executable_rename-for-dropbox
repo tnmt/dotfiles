@@ -1,0 +1,143 @@
+#!/bin/bash
+set -euo pipefail
+
+DROPBOX_CAMERA="$HOME/Dropbox/カメラアップロード"
+
+# Usage
+usage() {
+  cat <<'USAGE'
+Usage: rename-for-dropbox [OPTIONS] FILE...
+
+Rename image/video files to Dropbox Camera Upload naming convention.
+Format: YYYY-MM-DD HH.MM.SS.ext
+
+Options:
+  --move        Rename and move to Dropbox Camera Upload folder
+  --dest DIR    Rename and move to specified directory
+  -n, --dry-run Show what would be done without actually renaming
+  -h, --help    Show this help
+USAGE
+  exit 0
+}
+
+MOVE=false
+DRY_RUN=false
+DEST_DIR=""
+
+while [[ "${1:-}" == -* ]]; do
+  case "$1" in
+    --move)    MOVE=true; shift ;;
+    --dest)    DEST_DIR="$2"; shift 2 ;;
+    -n|--dry-run) DRY_RUN=true; shift ;;
+    -h|--help) usage ;;
+    *) echo "error: unknown option: $1" >&2; exit 1 ;;
+  esac
+done
+
+if [[ $# -eq 0 ]]; then
+  echo "error: no files specified" >&2
+  usage
+fi
+
+if ! command -v exiftool &>/dev/null; then
+  echo "error: exiftool is required (brew install exiftool)" >&2
+  exit 1
+fi
+
+renamed=0
+skipped=0
+failed=0
+
+for file in "$@"; do
+  if [[ ! -f "$file" ]]; then
+    echo "skip: $file (not a file)" >&2
+    ((skipped++))
+    continue
+  fi
+
+  # Get extension (lowercase)
+  ext="${file##*.}"
+  ext=$(echo "$ext" | tr '[:upper:]' '[:lower:]')
+
+  # Check if file is QuickTime format (MOV/MP4 store CreateDate in UTC)
+  is_quicktime=false
+  case "$ext" in
+    mov|mp4|m4v|m4a|3gp) is_quicktime=true ;;
+  esac
+
+  # Get EXIF date: try DateTimeOriginal first (local time, typical for JPEG)
+  date_str=$(exiftool -s3 -DateTimeOriginal "$file" 2>/dev/null || true)
+  from_utc=false
+
+  if [[ -z "$date_str" || "$date_str" == "0000:00:00 00:00:00" ]]; then
+    # Fallback to CreateDate (UTC for QuickTime, local for others)
+    date_str=$(exiftool -s3 -CreateDate "$file" 2>/dev/null || true)
+    if [[ -n "$date_str" && "$is_quicktime" == true ]]; then
+      from_utc=true
+    fi
+  fi
+
+  if [[ -n "$date_str" && "$date_str" != "0000:00:00 00:00:00" ]]; then
+    if [[ "$from_utc" == true ]]; then
+      # QuickTime CreateDate is UTC — convert to local time
+      epoch=$(TZ=UTC date -j -f '%Y:%m:%d %H:%M:%S' "$date_str" +'%s')
+      new_name=$(date -r "$epoch" +'%Y-%m-%d %H.%M.%S')
+    else
+      # EXIF format: "2024:01:05 07:54:03" (already local time)
+      year="${date_str:0:4}"
+      month="${date_str:5:2}"
+      day="${date_str:8:2}"
+      hour="${date_str:11:2}"
+      min="${date_str:14:2}"
+      sec="${date_str:17:2}"
+      new_name="${year}-${month}-${day} ${hour}.${min}.${sec}"
+    fi
+  else
+    # Fallback: file modification time
+    new_name=$(stat -f '%Sm' -t '%Y-%m-%d %H.%M.%S' "$file")
+    echo "info: $file - no EXIF date, using file modification time" >&2
+  fi
+
+  # Determine destination directory
+  if [[ "$MOVE" == true ]]; then
+    dest_dir="$DROPBOX_CAMERA"
+  elif [[ -n "$DEST_DIR" ]]; then
+    dest_dir="$DEST_DIR"
+  else
+    dest_dir=$(dirname "$file")
+  fi
+
+  # Ensure destination exists
+  if [[ ! -d "$dest_dir" ]]; then
+    echo "error: destination not found: $dest_dir" >&2
+    ((failed++))
+    continue
+  fi
+
+  # Build target path, handling duplicates
+  target="${dest_dir}/${new_name}.${ext}"
+  if [[ -e "$target" ]]; then
+    # Check if source and target are the same file
+    if [[ "$(realpath "$file")" == "$(realpath "$target")" ]]; then
+      echo "skip: $file (already named correctly)"
+      ((skipped++))
+      continue
+    fi
+    counter=1
+    while [[ -e "${dest_dir}/${new_name}-${counter}.${ext}" ]]; do
+      ((counter++))
+    done
+    target="${dest_dir}/${new_name}-${counter}.${ext}"
+  fi
+
+  if [[ "$DRY_RUN" == true ]]; then
+    echo "[dry-run] $file -> $target"
+  else
+    mv "$file" "$target"
+    echo "$file -> $target"
+  fi
+  ((renamed++))
+done
+
+echo "---"
+echo "done: ${renamed} renamed, ${skipped} skipped, ${failed} failed"

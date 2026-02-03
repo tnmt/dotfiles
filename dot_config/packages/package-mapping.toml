@@ -249,3 +249,8 @@ mode = "desktop"
 [fonts-firacode]
 apt = "fonts-firacode"
 mode = "desktop"
+
+[exiftool]
+brew = "exiftool"
+apt = "libimage-exiftool-perl"
+mode = "desktop"

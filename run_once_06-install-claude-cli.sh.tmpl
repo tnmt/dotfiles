@@ -25,4 +25,17 @@ else
 fi
 
 echo "Claude CLI is ready to use. Run 'claude --help' for usage information."
+
+# Install claude-chill (Claude Code rate limit handler)
+echo "Installing claude-chill..."
+if command -v claude-chill &> /dev/null; then
+    echo "claude-chill is already installed."
+else
+    if command -v cargo &> /dev/null; then
+        cargo install --git https://github.com/davidbeesley/claude-chill
+        echo "claude-chill installation completed."
+    else
+        echo "Warning: cargo not found, skipping claude-chill installation."
+    fi
+fi
 {{ end -}}

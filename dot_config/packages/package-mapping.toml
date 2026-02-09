@@ -122,6 +122,11 @@ brew = "hub"
 apt = "hub"
 mode = "development"
 
+[tree]
+brew = "tree"
+apt = "tree"
+mode = "development"
+
 # Build tools (apt only)
 [software-properties-common]
 apt = "software-properties-common"
@@ -162,11 +167,6 @@ darwin_only = true
 
 [ncdu]
 brew = "ncdu"
-mode = "development"
-darwin_only = true
-
-[tree]
-brew = "tree"
 mode = "development"
 darwin_only = true
 

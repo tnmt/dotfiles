@@ -2,12 +2,15 @@
 # Key is the canonical name (usually brew name)
 #
 # Fields:
-#   brew      - Homebrew package name (optional, defaults to key)
-#   apt       - apt package name (optional, omit if no apt package)
-#   apt_cmd   - Command name on apt if different from package name
-#   mode      - Installation mode: "base", "development", "desktop"
-#   brew_os   - OS for brew install: "all", "darwin", "linux" (default: "all")
-#               "darwin" means brew only on macOS (Linux uses apt)
+#   brew        - Homebrew package name (optional, defaults to key)
+#   apt         - apt package name (optional, omit if no apt package)
+#   apt_cmd     - Command name on apt if different from package name
+#   mode        - Installation mode: "base", "development", "desktop"
+#   darwin_only - true = brew install on macOS only, skip on Linux (default: false)
+#
+# OS routing (automatic):
+#   macOS  -> brew (if brew field exists)
+#   Linux  -> apt (if apt field exists), otherwise brew (unless darwin_only)
 
 # =============================================================================
 # Base packages
@@ -21,93 +24,78 @@ mode = "base"
 brew = "fzf"
 apt = "fzf"
 mode = "base"
-brew_os = "darwin"
 
 [direnv]
 brew = "direnv"
 apt = "direnv"
 mode = "base"
-brew_os = "darwin"
 
 [git]
 brew = "git"
 apt = "git"
 mode = "base"
-brew_os = "darwin"
 
 [delta]
 brew = "delta"
 apt = "git-delta"
 mode = "base"
-brew_os = "darwin"
 
 [tmux]
 brew = "tmux"
 apt = "tmux"
 mode = "base"
-brew_os = "darwin"
 
 [gh]
 brew = "gh"
 apt = "gh"
 mode = "base"
-brew_os = "darwin"
 
 [ripgrep]
 brew = "ripgrep"
 apt = "ripgrep"
 mode = "base"
-brew_os = "darwin"
 
 [eza]
 brew = "eza"
 apt = "eza"
 mode = "base"
-brew_os = "darwin"
 
 [bat]
 brew = "bat"
 apt = "bat"
 apt_cmd = "batcat"
 mode = "base"
-brew_os = "darwin"
 
 [zoxide]
 brew = "zoxide"
 apt = "zoxide"
 mode = "base"
-brew_os = "darwin"
 
 [jq]
 brew = "jq"
 apt = "jq"
 mode = "base"
-brew_os = "darwin"
 
 [yq]
 brew = "yq"
 apt = "yq"
 mode = "base"
-brew_os = "darwin"
 
 [tig]
 brew = "tig"
 apt = "tig"
 mode = "base"
-brew_os = "darwin"
 
 [gpg]
 brew = "gpg"
 apt = "gpg"
 mode = "base"
-brew_os = "darwin"
 
 [fd]
 brew = "fd"
 apt = "fd-find"
 apt_cmd = "fdfind"
 mode = "base"
-brew_os = "darwin"
 
 # =============================================================================
 # Development packages
@@ -116,7 +104,6 @@ brew_os = "darwin"
 [neovim]
 brew = "neovim"
 mode = "development"
-skip_cleanup = true  # Always use brew version
 
 [luarocks]
 brew = "luarocks"
@@ -134,7 +121,6 @@ mode = "development"
 brew = "hub"
 apt = "hub"
 mode = "development"
-brew_os = "darwin"
 
 # Build tools (apt only)
 [software-properties-common]
@@ -172,27 +158,27 @@ mode = "development"
 [htop]
 brew = "htop"
 mode = "development"
-brew_os = "darwin"
+darwin_only = true
 
 [ncdu]
 brew = "ncdu"
 mode = "development"
-brew_os = "darwin"
+darwin_only = true
 
 [tree]
 brew = "tree"
 mode = "development"
-brew_os = "darwin"
+darwin_only = true
 
 [wget]
 brew = "wget"
 mode = "development"
-brew_os = "darwin"
+darwin_only = true
 
 [envchain]
 brew = "envchain"
 mode = "development"
-brew_os = "darwin"
+darwin_only = true
 
 # =============================================================================
 # Container tools (darwin only)
@@ -201,17 +187,17 @@ brew_os = "darwin"
 [docker]
 brew = "docker"
 mode = "development"
-brew_os = "darwin"
+darwin_only = true
 
 [docker-compose]
 brew = "docker-compose"
 mode = "development"
-brew_os = "darwin"
+darwin_only = true
 
 [colima]
 brew = "colima"
 mode = "development"
-brew_os = "darwin"
+darwin_only = true
 
 # =============================================================================
 # Cloud tools
@@ -220,7 +206,7 @@ brew_os = "darwin"
 [awscli]
 brew = "awscli"
 mode = "development"
-brew_os = "darwin"
+darwin_only = true
 
 [kubectl]
 brew = "kubectl"

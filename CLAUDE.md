@@ -16,8 +16,9 @@ chezmoi で管理する dotfiles リポジトリ。詳細は README.md を参照
 | `apt` | apt パッケージ名 | (省略で apt なし) |
 | `apt_cmd` | apt 側のコマンド名が異なる場合 | (省略で apt と同じ) |
 | `mode` | `base` / `development` / `desktop` | 必須 |
-| `brew_os` | brew 対象 OS: `all` / `darwin` / `linux` | `all` |
-| `skip_cleanup` | `true` で cleanup-brew-apt から除外 | `false` |
+| `darwin_only` | `true` で macOS のみ brew インストール | `false` |
+
+OS の振り分けは自動: macOS は brew、Linux は apt があれば apt、なければ brew（`darwin_only` 除く）。
 
 ### パッケージ追加の手順
 
@@ -33,12 +34,17 @@ chezmoi で管理する dotfiles リポジトリ。詳細は README.md を参照
 brew = "brew名"
 apt = "apt名"
 mode = "development"
-brew_os = "darwin"
 
-# brew のみ (apt にパッケージが無い場合)
+# brew のみ・全 OS (apt にパッケージが無い場合)
 [パッケージ名]
 brew = "brew名"
 mode = "development"
+
+# brew のみ・macOS 限定 (Docker, コンテナツール等)
+[パッケージ名]
+brew = "brew名"
+mode = "development"
+darwin_only = true
 
 # apt のみ (Linux ビルドツール等)
 [パッケージ名]

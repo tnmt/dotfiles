@@ -127,6 +127,11 @@ brew = "tree"
 apt = "tree"
 mode = "development"
 
+[wget]
+brew = "wget"
+apt = "wget"
+mode = "development"
+
 # Build tools (apt only)
 [software-properties-common]
 apt = "software-properties-common"
@@ -167,11 +172,6 @@ darwin_only = true
 
 [ncdu]
 brew = "ncdu"
-mode = "development"
-darwin_only = true
-
-[wget]
-brew = "wget"
 mode = "development"
 darwin_only = true
 

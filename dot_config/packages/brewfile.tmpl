@@ -4,21 +4,51 @@
 # Install with: brew bundle --file=~/.config/packages/brewfile
 # Generated from package-mapping.toml
 
-# Packages for all OS
+# Base and development packages for all OS
 {{- range $name, $pkg := $pkgMapping }}
 {{- if hasKey $pkg "brew" }}
+{{- if or (eq $pkg.mode "base") (eq $pkg.mode "development") }}
 {{- if or (not (hasKey $pkg "brew_os")) (eq $pkg.brew_os "all") }}
 brew "{{ $pkg.brew }}"
 {{- end }}
 {{- end }}
 {{- end }}
+{{- end }}
 
-# macOS-only packages
+# Desktop packages for all OS
+{{- if $.desktop }}
+{{- range $name, $pkg := $pkgMapping }}
+{{- if hasKey $pkg "brew" }}
+{{- if eq $pkg.mode "desktop" }}
+{{- if or (not (hasKey $pkg "brew_os")) (eq $pkg.brew_os "all") }}
+brew "{{ $pkg.brew }}"
+{{- end }}
+{{- end }}
+{{- end }}
+{{- end }}
+{{- end }}
+
+# macOS-only packages (base + development)
 {{- if eq .chezmoi.os "darwin" }}
 {{- range $name, $pkg := $pkgMapping }}
 {{- if hasKey $pkg "brew" }}
+{{- if or (eq $pkg.mode "base") (eq $pkg.mode "development") }}
 {{- if and (hasKey $pkg "brew_os") (eq $pkg.brew_os "darwin") }}
 brew "{{ $pkg.brew }}"
+{{- end }}
+{{- end }}
+{{- end }}
+{{- end }}
+{{- end }}
+
+# macOS-only desktop packages
+{{- if and (eq .chezmoi.os "darwin") .desktop }}
+{{- range $name, $pkg := $pkgMapping }}
+{{- if hasKey $pkg "brew" }}
+{{- if eq $pkg.mode "desktop" }}
+{{- if and (hasKey $pkg "brew_os") (eq $pkg.brew_os "darwin") }}
+brew "{{ $pkg.brew }}"
+{{- end }}
 {{- end }}
 {{- end }}
 {{- end }}

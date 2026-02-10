@@ -9,5 +9,5 @@ LICENSE
 .DS_Store
 
 {{ if ne .chezmoi.os "darwin" }}
-dot_local/bin/executable_rename-for-dropbox
+.local/bin/rename-for-dropbox
 {{ end }}

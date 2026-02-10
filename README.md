@@ -7,7 +7,7 @@ tnmtの開発環境を `chezmoi` で管理するための設定群です。XDG �
 - **シェル**: Zsh + Powerlevel10k、tmux ヘルパー (`tm`)。
 - **エディタ**: Neovim（lazy.nvim、mason、none-ls で LSP/formatter を管理）。
 - **パッケージ管理**: `package-mapping.toml` で apt/brew のパッケージ名を一元管理。brewfile と apt install リストを自動生成。
-- **ランタイム管理**: mise による Node, Python, Ruby, Go のバージョン管理。
+- **ランタイム管理**: mise による Node, Python, Ruby, Go, Rust のバージョン管理。
 - **ユーティリティ**:
   - `cleanup-brew-apt` - apt と brew で重複インストールされたパッケージを brew から削除 (Python)
   - `tm` - tmux セッション管理ヘルパー
@@ -73,13 +73,17 @@ mode = "base"
 [neovim]
 brew = "neovim"
 mode = "development"
-skip_cleanup = true  # cleanup-brew-apt の対象外
+
+[awscli]
+brew = "awscli"
+mode = "development"
+darwin_only = true
 ```
 
 - **brew** / **apt**: 各パッケージマネージャでのパッケージ名
+- **apt_cmd**: apt 側のコマンド名がパッケージ名と異なる場合
 - **mode**: `base` (常時), `development`, `desktop`
-- **brew_os**: `all` (デフォルト), `darwin` (macOS のみ brew)
-- **skip_cleanup**: `true` で cleanup-brew-apt から除外
+- **darwin_only**: `true` で macOS のみ brew インストール（デフォルト: `false`）
 
 このファイルから以下が自動生成されます:
 - `brewfile` (brew bundle 用)

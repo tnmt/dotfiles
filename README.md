@@ -89,6 +89,25 @@ darwin_only = true
 - `brewfile` (brew bundle 用)
 - `run_once_01-install-packages.sh` 内の apt install リスト
 
+### OSごとの解決ルール
+
+- **macOS**: `brew` が定義されているパッケージを Homebrew でインストール
+- **Linux**: `apt` があれば apt を優先、`apt` がなければ brew を利用
+- **Linux + darwin_only=true**: brew でもインストールしない
+
+### パッケージ追加手順
+
+1. `dot_config/packages/package-mapping.toml` にエントリを追加
+2. `chezmoi apply` を実行してテンプレートを再生成
+3. 生成結果を確認（例: `~/.config/packages/brewfile`）
+4. 必要に応じて `brew bundle --file=~/.config/packages/brewfile` / apt で適用
+
+### 運用メモ
+
+- `brew` は「キー名を暗黙利用」ではなく、**明示定義を推奨**（現行テンプレートでは `brew` キーがある項目のみ Brewfile に出力）
+- 現在の方針は基本的に「最新追従」（バージョン固定は未導入）
+- Homebrew / mise 本体の導入は `package-mapping.toml` 管理外で、セットアップスクリプト側で実行
+
 ## 1Password 連携
 
 テンプレートから `{{ onepasswordRead "op://..." }}` を利用することで、リポジトリに秘密情報を含めずに 1Password から値を取得できます。`op signin` 済みであることが前提です。

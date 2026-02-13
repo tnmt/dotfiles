@@ -12,19 +12,29 @@ chezmoi で管理する dotfiles リポジトリ。詳細は README.md を参照
 
 | フィールド | 説明 | デフォルト |
 |-----------|------|-----------|
-| `brew` | Homebrew パッケージ名 | キー名 |
+| `brew` | Homebrew パッケージ名 | (省略で brew 出力なし) |
 | `apt` | apt パッケージ名 | (省略で apt なし) |
 | `apt_cmd` | apt 側のコマンド名が異なる場合 | (省略で apt と同じ) |
 | `mode` | `base` / `development` / `desktop` | 必須 |
 | `darwin_only` | `true` で macOS のみ brew インストール | `false` |
 
-OS の振り分けは自動: macOS は brew、Linux は apt があれば apt、なければ brew（`darwin_only` 除く）。
+OS の振り分けは自動:
+- macOS: `brew` が定義されているパッケージを brew でインストール
+- Linux: `apt` があれば apt を優先、`apt` がなければ brew を利用
+- Linux + `darwin_only=true`: brew でもインストールしない
 
 ### パッケージ追加の手順
 
 1. `dot_config/packages/package-mapping.toml` にエントリを追加
 2. `chezmoi apply` で Brewfile / apt リストが自動再生成される
-3. `brew bundle` または apt install で実際にインストール
+3. 生成結果を確認（例: `~/.config/packages/brewfile`）
+4. 必要に応じて `brew bundle --file=~/.config/packages/brewfile` / apt で適用
+
+### 運用メモ
+
+- `brew` は明示定義を推奨（現行テンプレートは `brew` キーがある項目のみ Brewfile に出力）
+- 現在の方針は基本的に最新追従（バージョン固定は未導入）
+- Homebrew / mise 本体の導入は `package-mapping.toml` 管理外で、セットアップスクリプト側で実行
 
 ### よくあるパターン
 

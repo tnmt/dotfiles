@@ -217,6 +217,9 @@ POWERLEVEL9K_DISABLE_CONFIGURATION_WIZARD=true
 
 [ -f ~/.iterm2_shell_integration.zsh ] && source ~/.iterm2_shell_integration.zsh
 
+# gogcli (keyring password)
+[ -f ~/.config/gogcli/.keyring-password ] && export GOG_KEYRING_PASSWORD="$(cat ~/.config/gogcli/.keyring-password)"
+
 # 1password cli
 [ -f ~/.config/op/plugins.sh ] && source ~/.config/op/plugins.sh
 

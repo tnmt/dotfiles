@@ -21,8 +21,7 @@
 .python-version
 
 # Claude Code
-**/.claude/settings.local.json
-.claude/
+**/.claude/*.local.*
 
 # OS-specific
 Thumbs.db

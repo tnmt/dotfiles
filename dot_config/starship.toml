@@ -18,6 +18,8 @@ $time\
 [ ](fg:#1d2230)\
 \n$character"""
 
+right_format = """$all"""
+
 [os]
 format = "[$symbol ](bg:#a3aed2 fg:#090c0c)"
 disabled = false

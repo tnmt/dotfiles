@@ -42,6 +42,10 @@ truncation_symbol = "…/"
 "Music" = " "
 "Pictures" = " "
 
+[hostname]
+ssh_only = false
+disabled = false
+
 [git_branch]
 symbol = ""
 style = "bg:#394260"

@@ -2,7 +2,7 @@
 
 format = """
 [░▒▓](#a3aed2)\
-[  ](bg:#a3aed2 fg:#090c0c)\
+$os\
 [](bg:#769ff0 fg:#a3aed2)\
 $directory\
 [](fg:#769ff0 bg:#394260)\
@@ -17,6 +17,16 @@ $php\
 $time\
 [ ](fg:#1d2230)\
 \n$character"""
+
+[os]
+format = "[$symbol ](bg:#a3aed2 fg:#090c0c)"
+disabled = false
+
+[os.symbols]
+Macos = "  "  # nf-fa-apple
+Ubuntu = "  " # nf-linux-ubuntu
+Debian = "  " # nf-linux-debian
+NixOS = "  "  # nf-linux-nixos
 
 [directory]
 style = "fg:#e3e5e5 bg:#769ff0"

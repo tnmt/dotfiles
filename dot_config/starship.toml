@@ -20,6 +20,8 @@ $time\
 
 right_format = """$all"""
 
+command_timeout = 1000
+
 [os]
 format = "[$symbol ](bg:#a3aed2 fg:#090c0c)"
 disabled = false
@@ -41,6 +43,9 @@ truncation_symbol = "…/"
 "Downloads" = " "
 "Music" = " "
 "Pictures" = " "
+
+[direnv]
+disabled = false
 
 [hostname]
 ssh_only = false
@@ -80,3 +85,6 @@ disabled = false
 time_format = "%T" # Hour:Minute Format
 style = "bg:#1d2230"
 format = '[[  $time ](fg:#a0a9cb bg:#1d2230)]($style)'
+
+[mise]
+disabled = false

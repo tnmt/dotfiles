@@ -95,7 +95,7 @@ truncate_to_repo = false
 disabled = false
 
 [hostname]
-ssh_symbol = " "
+ssh_symbol = " "
 ssh_only = false
 disabled = false
 

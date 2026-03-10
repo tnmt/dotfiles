@@ -1,28 +1,30 @@
 "$schema" = 'https://starship.rs/config-schema.json'
 
+palette = "tokyonight_storm"
+
 format = """
-[░▒▓](#a3aed2)\
+[░▒▓](fg:fg_dark)\
 $os\
-[](bg:#769ff0 fg:#a3aed2)\
+[](bg:blue fg:fg_dark)\
 $directory\
-[](fg:#769ff0 bg:#394260)\
+[](fg:blue bg:terminal_black)\
 $git_branch\
 $git_status\
-[](fg:#394260 bg:#212736)\
+[](fg:terminal_black bg:bg)\
 $nodejs\
 $rust\
 $golang\
 $php\
-[](fg:#212736 bg:#1d2230)\
+[](fg:bg bg:bg_dark)\
 $time\
-[ ](fg:#1d2230)\
+[ ](fg:bg_dark)\
 $all\
 $character"""
 
 command_timeout = 1000
 
 [os]
-format = "[$symbol ](bg:#a3aed2 fg:#090c0c)"
+format = "[$symbol ](bg:fg_dark fg:bg_dark)"
 disabled = false
 
 [os.symbols]
@@ -32,7 +34,7 @@ Debian = "  " # nf-linux-debian
 NixOS = "  "  # nf-linux-nixos
 
 [directory]
-style = "fg:#e3e5e5 bg:#769ff0"
+style = "fg:fg bg:blue"
 format = "[ $path ]($style)"
 truncation_length = 100
 truncate_to_repo = false
@@ -52,38 +54,57 @@ disabled = false
 
 [git_branch]
 symbol = ""
-style = "bg:#394260"
-format = '[[ $symbol $branch ](fg:#769ff0 bg:#394260)]($style)'
+style = "bg:terminal_black"
+format = '[[ $symbol $branch ](fg:blue bg:terminal_black)]($style)'
 
 [git_status]
-style = "bg:#394260"
-format = '[[($all_status$ahead_behind )](fg:#769ff0 bg:#394260)]($style)'
+style = "bg:terminal_black"
+format = '[[($all_status$ahead_behind )](fg:blue bg:terminal_black)]($style)'
 
 [nodejs]
 symbol = ""
-style = "bg:#212736"
-format = '[[ $symbol ($version) ](fg:#769ff0 bg:#212736)]($style)'
+style = "bg:bg"
+format = '[[ $symbol ($version) ](fg:green bg:bg)]($style)'
 
 [rust]
 symbol = ""
-style = "bg:#212736"
-format = '[[ $symbol ($version) ](fg:#769ff0 bg:#212736)]($style)'
+style = "bg:bg"
+format = '[[ $symbol ($version) ](fg:orange bg:bg)]($style)'
 
 [golang]
 symbol = ""
-style = "bg:#212736"
-format = '[[ $symbol ($version) ](fg:#769ff0 bg:#212736)]($style)'
+style = "bg:bg"
+format = '[[ $symbol ($version) ](fg:cyan bg:bg)]($style)'
 
 [php]
 symbol = ""
-style = "bg:#212736"
-format = '[[ $symbol ($version) ](fg:#769ff0 bg:#212736)]($style)'
+style = "bg:bg"
+format = '[[ $symbol ($version) ](fg:purple bg:bg)]($style)'
 
 [time]
 disabled = false
 time_format = "%T" # Hour:Minute Format
-style = "bg:#1d2230"
-format = '[[  $time ](fg:#a0a9cb bg:#1d2230)]($style)'
+style = "bg:bg_dark"
+format = '[[  $time ](fg:fg_dark bg:bg_dark)]($style)'
 
 [mise]
 disabled = false
+
+[palettes.tokyonight_storm]
+red = "#f7768e"
+orange = "#ff9e64"
+yellow = "#e0af68"
+green = "#9ece6a"
+teal = "#73daca"
+cyan = "#7dcfff"
+blue = "#7aa2f7"
+purple = "#bb9af7"
+magenta = "#ff007c"
+fg = "#c0caf5"
+fg_dark = "#a9b1d6"
+comment = "#565f89"
+dark5 = "#737aa2"
+terminal_black = "#414868"
+bg_highlight = "#292e42"
+bg = "#24283b"
+bg_dark = "#1f2335"

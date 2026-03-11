@@ -1,0 +1,11 @@
+theme = TokyoNight Storm
+font-size = 16
+font-family = MesloLGS Nerd Font Mono
+font-family = Hiragino Kaku Gothic ProN
+copy-on-select = clipboard
+window-save-state = always
+background-opacity = 0.95
+background-blur-radius = 20
+window-padding-x = 5
+window-padding-y = 5
+macos-titlebar-style = "transparent"

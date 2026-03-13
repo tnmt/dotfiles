@@ -9,3 +9,4 @@ background-blur-radius = 20
 window-padding-x = 5
 window-padding-y = 5
 macos-titlebar-style = "transparent"
+term = xterm-256color

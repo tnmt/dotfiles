@@ -1,6 +1,6 @@
 theme = TokyoNight Storm
 font-size = 16
-font-family = MesloLGS Nerd Font Mono
+font-family = MesloLGS Nerd Font
 font-family = Hiragino Kaku Gothic ProN
 copy-on-select = clipboard
 window-save-state = always

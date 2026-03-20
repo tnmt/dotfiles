@@ -181,6 +181,13 @@ if command -v zoxide >/dev/null 2>&1; then
     eval "$(zoxide init zsh --cmd j)"
 fi
 
+# Support the official Atuin installer on hosts without Homebrew packaging.
+if [ -f "$HOME/.atuin/bin/env" ]; then
+    . "$HOME/.atuin/bin/env"
+elif [ -d "$HOME/.atuin/bin" ]; then
+    export PATH="$HOME/.atuin/bin:$PATH"
+fi
+
 # Initialize atuin for interactive history search.
 # Keep the existing Up arrow behavior and only replace Ctrl-r.
 if command -v atuin >/dev/null 2>&1; then

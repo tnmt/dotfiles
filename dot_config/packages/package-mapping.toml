@@ -74,7 +74,7 @@ mode = "base"
 
 [atuin]
 brew = "atuin"
-mode = "base"
+mode = "development"
 
 [jq]
 brew = "jq"

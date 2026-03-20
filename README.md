@@ -108,6 +108,7 @@ darwin_only = true
 - `brew` は「キー名を暗黙利用」ではなく、**明示定義を推奨**（現行テンプレートでは `brew` キーがある項目のみ Brewfile に出力）
 - 現在の方針は基本的に「最新追従」（バージョン固定は未導入）
 - Homebrew / mise 本体の導入は `package-mapping.toml` 管理外で、セットアップスクリプト側で実行
+- Homebrew のみで入るツール（例: `atuin`, `1password-cli`）は、Linux で Homebrew 前提になりすぎないよう `development` に寄せる
 
 ## 1Password 連携
 

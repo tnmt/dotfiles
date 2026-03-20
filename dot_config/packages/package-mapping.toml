@@ -139,6 +139,7 @@ mode = "development"
 
 [1password-cli]
 cask = "1password-cli"
+apt = "1password-cli"
 mode = "development"
 
 # Build tools (apt only)

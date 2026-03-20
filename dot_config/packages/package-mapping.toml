@@ -3,13 +3,14 @@
 #
 # Fields:
 #   brew        - Homebrew package name (optional, defaults to key)
+#   cask        - Homebrew cask name (optional)
 #   apt         - apt package name (optional, omit if no apt package)
 #   apt_cmd     - Command name on apt if different from package name
 #   mode        - Installation mode: "base", "development", "desktop"
 #   darwin_only - true = brew install on macOS only, skip on Linux (default: false)
 #
 # OS routing (automatic):
-#   macOS  -> brew (if brew field exists)
+#   macOS  -> brew/cask (if brew or cask field exists)
 #   Linux  -> apt (if apt field exists), otherwise brew (unless darwin_only)
 
 # =============================================================================
@@ -134,6 +135,10 @@ mode = "development"
 [wget]
 brew = "wget"
 apt = "wget"
+mode = "development"
+
+[1password-cli]
+cask = "1password-cli"
 mode = "development"
 
 # Build tools (apt only)

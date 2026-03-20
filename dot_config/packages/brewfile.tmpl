@@ -6,12 +6,19 @@
 
 # Base and development packages
 {{- range $name, $pkg := $pkgMapping }}
-{{- if hasKey $pkg "brew" }}
+{{- if or (hasKey $pkg "brew") (hasKey $pkg "cask") }}
 {{- if or (eq $pkg.mode "base") (eq $pkg.mode "development") }}
 {{- if eq $.chezmoi.os "darwin" }}
+{{- if hasKey $pkg "brew" }}
 brew "{{ $pkg.brew }}"
+{{- end }}
+{{- if hasKey $pkg "cask" }}
+cask "{{ $pkg.cask }}"
+{{- end }}
 {{- else if not (or (hasKey $pkg "apt") (and (hasKey $pkg "darwin_only") $pkg.darwin_only)) }}
+{{- if hasKey $pkg "brew" }}
 brew "{{ $pkg.brew }}"
+{{- end }}
 {{- end }}
 {{- end }}
 {{- end }}
@@ -20,12 +27,19 @@ brew "{{ $pkg.brew }}"
 # Desktop packages
 {{- if $.desktop }}
 {{- range $name, $pkg := $pkgMapping }}
-{{- if hasKey $pkg "brew" }}
+{{- if or (hasKey $pkg "brew") (hasKey $pkg "cask") }}
 {{- if eq $pkg.mode "desktop" }}
 {{- if eq $.chezmoi.os "darwin" }}
+{{- if hasKey $pkg "brew" }}
 brew "{{ $pkg.brew }}"
+{{- end }}
+{{- if hasKey $pkg "cask" }}
+cask "{{ $pkg.cask }}"
+{{- end }}
 {{- else if not (or (hasKey $pkg "apt") (and (hasKey $pkg "darwin_only") $pkg.darwin_only)) }}
+{{- if hasKey $pkg "brew" }}
 brew "{{ $pkg.brew }}"
+{{- end }}
 {{- end }}
 {{- end }}
 {{- end }}

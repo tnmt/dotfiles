@@ -10,3 +10,8 @@
     hostname = {{ $hostname | quote }}
     desktop = {{ $desktop }}
     development = {{ $development }}
+
+{{- if not $desktop }}
+[onepassword]
+    mode = "service"
+{{- end }}

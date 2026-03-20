@@ -83,6 +83,7 @@ p10k configure
 - **zsh-autosuggestions**: コマンド履歴に基づいた自動補完候補
 - **zsh-syntax-highlighting**: コマンドのシンタックスハイライト
 - **zsh-256color**: 256色対応
+- **atuin**: 履歴検索と同期対応のシェル履歴マネージャ
 - **powerlevel10k**: プロンプトテーマ（デフォルト）
 - **zsh-z**: ディレクトリジャンプ（`j`コマンド）
 - **history-search-multi-word**: 高度な履歴検索
@@ -111,7 +112,7 @@ p10k configure
 - `Ctrl+x b` - ディレクトリ移動履歴を表示
 - `Ctrl+x Ctrl+b` - Gitブランチ切り替え
 - `Ctrl+]` - GHQリポジトリへジャンプ
-- `Ctrl+r` - コマンド実行履歴を表示（fzf標準）
+- `Ctrl+r` - `atuin` でコマンド履歴を検索
 
 ## バージョンマネージャー
 
@@ -130,6 +131,13 @@ p10k configure
   - タイムスタンプ記録
   - 重複コマンドの除外
   - 先頭スペースのコマンドは記録しない
+  - `Ctrl+r` から `atuin` のインタラクティブ検索を利用
+
+### atuin
+
+- 設定ファイル: `~/.config/atuin/config.toml`
+- 現在の設定ではローカル履歴検索のみを有効化
+- 同期を使いたい場合は `atuin register` または `atuin login` を実行
 
 ## トラブルシューティング
 

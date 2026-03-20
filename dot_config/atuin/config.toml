@@ -1,0 +1,8 @@
+# Atuin uses XDG paths automatically in this dotfiles setup.
+# Sync remains opt-in until `atuin login` or `atuin register` is run.
+auto_sync = false
+sync_frequency = "5m"
+search_mode = "prefix"
+filter_mode = "workspace"
+inline_height = 20
+enter_accept = true

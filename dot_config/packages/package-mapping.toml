@@ -71,6 +71,10 @@ brew = "zoxide"
 apt = "zoxide"
 mode = "base"
 
+[atuin]
+brew = "atuin"
+mode = "base"
+
 [jq]
 brew = "jq"
 apt = "jq"

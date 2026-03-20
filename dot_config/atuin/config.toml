@@ -2,7 +2,7 @@
 # Sync remains opt-in until `atuin login` or `atuin register` is run.
 auto_sync = false
 sync_frequency = "5m"
-search_mode = "prefix"
-filter_mode = "workspace"
+search_mode = "fuzzy"
+filter_mode = "global"
 inline_height = 20
 enter_accept = true

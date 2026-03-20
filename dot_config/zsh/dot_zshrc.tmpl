@@ -23,6 +23,13 @@ fi
 export MANPATH=$MANPATH
 export PAGER=less
 export LESS='-R -X'
+{{ if not .desktop -}}
+
+# Headless hosts use a 1Password service account instead of desktop app integration.
+if [ -f "$HOME/.config/op/service-account-token" ]; then
+    export OP_SERVICE_ACCOUNT_TOKEN="$(cat "$HOME/.config/op/service-account-token")"
+fi
+{{ end -}}
 
 ### Added by Zinit's installer
 if [[ ! -f $HOME/.local/share/zinit/zinit.git/zinit.zsh ]]; then

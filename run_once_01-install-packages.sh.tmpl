@@ -103,16 +103,16 @@ if command -v mise &> /dev/null; then
     if [ -f "$HOME/.config/mise/config.toml" ]; then
         # Skip Ruby during bootstrap because source builds are slow.
         mise install bun node python go rust usage \
-            npm:@openai/codex npm:@google/gemini-cli npm:ccusage
+            npm:@openai/codex npm:ccusage
     else
         cat >"$HOME/.config/mise/config.toml" <<'EOF'
 {{ includeTemplate "dot_config/mise/config.toml.tmpl" . -}}
 EOF
         # Skip Ruby during bootstrap because source builds are slow.
         mise install bun node python go rust usage \
-            npm:@openai/codex npm:@google/gemini-cli npm:ccusage
+            npm:@openai/codex npm:ccusage
     fi
-    echo "Skipping Ruby during bootstrap. Install later with: mise install ruby@3.4"
+    echo "Skipping Ruby and Gemini CLI during bootstrap. Install later with: mise install ruby@3.4 npm:@google/gemini-cli"
 fi
 {{ end -}}
 

@@ -181,6 +181,8 @@ if command -v zoxide >/dev/null 2>&1; then
     eval "$(zoxide init zsh --cmd j)"
 fi
 
+[ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
+
 # Support the official Atuin installer on hosts without Homebrew packaging.
 if [ -f "$HOME/.atuin/bin/env" ]; then
     . "$HOME/.atuin/bin/env"
@@ -190,6 +192,7 @@ fi
 
 # Initialize atuin for interactive history search.
 # Keep the existing Up arrow behavior and only replace Ctrl-r.
+# Must come AFTER fzf to override its Ctrl-r binding.
 if command -v atuin >/dev/null 2>&1; then
     eval "$(atuin init zsh --disable-up-arrow)"
 fi
@@ -247,8 +250,6 @@ if command -v starship &> /dev/null; then
     }
     zle -N zle-line-init
 fi
-
-[ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
 
 [ -f ~/.iterm2_shell_integration.zsh ] && source ~/.iterm2_shell_integration.zsh
 

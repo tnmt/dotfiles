@@ -1,10 +1,3 @@
-{{ if .development -}}
-# Ensure Linuxbrew PATH is available before plugin loading (kubectl, etc.)
-if [ -x /home/linuxbrew/.linuxbrew/bin/brew ]; then
-    eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
-fi
-{{ end -}}
-
 export LANG=ja_JP.UTF-8
 export LC_ALL=ja_JP.UTF-8
 export GOPATH=$HOME/.go
@@ -13,12 +6,14 @@ export PATH=${KREW_ROOT:-$HOME/.krew}/bin:$GOPATH/bin:$HOME/.cache/.bun/bin:$HOM
 export PATH="$PATH:/Applications/Obsidian.app/Contents/MacOS"
 {{ end -}}
 {{ if .development -}}
-arch=`uname -m`
-if [ "$arch" = "x86_64" ]; then
-    export PATH="/usr/local/bin/brew:$PATH"
-else
-    export PATH="/opt/homebrew/bin:$PATH"
+# Homebrew (macOS) / Linuxbrew
+{{- if eq .chezmoi.os "darwin" }}
+export PATH="/opt/homebrew/bin:$PATH"
+{{- else }}
+if [ -x /home/linuxbrew/.linuxbrew/bin/brew ]; then
+    eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
 fi
+{{- end }}
 {{ end -}}
 export MANPATH=$MANPATH
 export PAGER=less

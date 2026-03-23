@@ -297,13 +297,11 @@ mode = "desktop"
 
 [font-meslo-lg-nerd-font]
 cask = "font-meslo-lg-nerd-font"
-tap = "homebrew/cask-fonts"
 pacman = "ttf-meslo-nerd"
 mode = "desktop"
 
 [font-fira-code-nerd-font]
 cask = "font-fira-code-nerd-font"
-tap = "homebrew/cask-fonts"
 pacman = "ttf-firacode-nerd"
 mode = "desktop"
 

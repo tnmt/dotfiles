@@ -2,25 +2,9 @@
 
 ## プロンプト設定
 
-このzsh設定では、2つのプロンプトから選択できます：
+このzsh設定では Starship を利用します。
 
-### Powerlevel10k (現在のデフォルト)
-
-高機能なZsh専用プロンプトで、以下の特徴があります：
-- 高速なインスタントプロンプト
-- Git情報の詳細表示
-- コマンド実行時間の表示
-- Python仮想環境、Node.jsバージョンなどの表示
-- 豊富なカスタマイズオプション
-
-**設定ファイル**: `~/.p10k.zsh`
-
-**カスタマイズ**:
-```bash
-p10k configure
-```
-
-### Starship (代替オプション)
+### Starship
 
 シンプルで高速、多言語対応のプロンプトです：
 - Rust製で非常に高速
@@ -30,51 +14,7 @@ p10k configure
 
 **設定ファイル**: `~/.config/starship/starship.toml`
 
-## プロンプトの切り替え方法
-
-### Powerlevel10k → Starship
-
-1. `.zshrc`を編集:
-   ```bash
-   nvim ~/.zshrc
-   ```
-
-2. Powerlevel10kの設定をコメントアウト:
-   ```bash
-   # Option 1: Powerlevel10k (現在有効)
-   # POWERLEVEL9K_DISABLE_CONFIGURATION_WIZARD=true
-   # [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
-   ```
-
-3. Starshipの設定を有効化:
-   ```bash
-   # Option 2: Starship
-   if command -v starship &> /dev/null; then
-       eval "$(starship init zsh)"
-   fi
-   ```
-
-4. zinitの設定でpowerlevel10kをコメントアウト:
-   ```bash
-   # zinit ice depth=1
-   # zinit light romkatv/powerlevel10k
-   ```
-
-5. Starshipをインストール:
-   ```bash
-   brew install starship
-   # または
-   curl -sS https://starship.rs/install.sh | sh
-   ```
-
-6. シェルを再起動:
-   ```bash
-   exec zsh
-   ```
-
-### Starship → Powerlevel10k
-
-上記の逆の手順を実行してください。
+Starship は `run_once_02-install-starship.sh` で導入され、`~/.config/zsh/.zshrc` から初期化されます。
 
 ## インストールされているプラグイン
 
@@ -84,7 +24,6 @@ p10k configure
 - **zsh-syntax-highlighting**: コマンドのシンタックスハイライト
 - **zsh-256color**: 256色対応
 - **atuin**: 履歴検索と同期対応のシェル履歴マネージャ
-- **powerlevel10k**: プロンプトテーマ（デフォルト）
 - **zsh-z**: ディレクトリジャンプ（`j`コマンド）
 - **history-search-multi-word**: 高度な履歴検索
 - **kube-aliases**: Kubernetes用のエイリアス
@@ -143,17 +82,12 @@ p10k configure
 
 ### プロンプトが表示されない
 
-1. Powerlevel10kが正しくインストールされているか確認:
+1. Starship がインストールされているか確認:
    ```bash
-   ls ~/.local/share/zinit/plugins/romkatv---powerlevel10k/
+   command -v starship
    ```
 
-2. p10k設定ファイルが存在するか確認:
-   ```bash
-   ls ~/.p10k.zsh
-   ```
-
-3. zinitを再インストール:
+2. zinitを再インストール:
    ```bash
    rm -rf ~/.local/share/zinit
    exec zsh
@@ -195,7 +129,6 @@ done
 
 ## 参考リンク
 
-- [Powerlevel10k](https://github.com/romkatv/powerlevel10k)
 - [Starship](https://starship.rs/)
 - [Zinit](https://github.com/zdharma-continuum/zinit)
 - [zsh-users](https://github.com/zsh-users)

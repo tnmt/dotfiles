@@ -15,6 +15,7 @@ chezmoi で管理する dotfiles リポジトリ。詳細は README.md を参照
 | `brew` | Homebrew パッケージ名 | (省略で brew 出力なし) |
 | `apt` | apt パッケージ名 | (省略で apt なし) |
 | `apt_cmd` | apt 側のコマンド名が異なる場合 | (省略で apt と同じ) |
+| `tap` | Homebrew tap (例: `k1LoW/tap`) | (省略で tap なし) |
 | `mode` | `base` / `development` / `desktop` | 必須 |
 | `darwin_only` | `true` で macOS のみ brew インストール | `false` |
 

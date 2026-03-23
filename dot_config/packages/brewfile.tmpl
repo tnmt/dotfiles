@@ -4,6 +4,17 @@
 # Install with: brew bundle --file=~/.config/packages/brewfile
 # Generated from package-mapping.toml
 
+# Taps
+{{- $taps := dict }}
+{{- range $name, $pkg := $pkgMapping }}
+{{- if hasKey $pkg "tap" }}
+{{- $_ := set $taps $pkg.tap true }}
+{{- end }}
+{{- end }}
+{{- range $tap, $_ := $taps }}
+tap "{{ $tap }}"
+{{- end }}
+
 # Base and development packages
 {{- range $name, $pkg := $pkgMapping }}
 {{- if or (hasKey $pkg "brew") (hasKey $pkg "cask") }}

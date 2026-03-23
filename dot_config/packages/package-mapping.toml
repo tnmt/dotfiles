@@ -7,6 +7,7 @@
 #   apt         - apt package name (optional, omit if no apt package)
 #   apt_cmd     - Command name on apt if different from package name
 #   mode        - Installation mode: "base", "development", "desktop"
+#   tap         - Homebrew tap (e.g. "k1LoW/tap"), omit if not needed
 #   darwin_only - true = brew install on macOS only, skip on Linux (default: false)
 #
 # OS routing (automatic):
@@ -208,6 +209,11 @@ darwin_only = true
 brew = "colima"
 mode = "development"
 darwin_only = true
+
+[mo]
+brew = "mo"
+tap = "k1LoW/tap"
+mode = "desktop"
 
 # =============================================================================
 # Cloud tools

@@ -1,17 +1,23 @@
 #!/bin/bash
 
-# Install packages based on OS and available package managers
+# Bootstrap package managers and sync declared apt/pacman packages
 set -e
 
 OS="$(uname -s)"
 
 {{- $pkgMapping := include "dot_config/packages/package-mapping.toml" | fromToml }}
 
-{{ if .development -}}
-{{- if or (eq .chezmoi.os "darwin") (and (eq .chezmoi.os "linux") (ne .chezmoi.osRelease.id "arch")) }}
-# Install Homebrew if not installed
-if ! command -v brew &> /dev/null; then
-    echo "Installing Homebrew..."
+log() {
+    printf '==> %s\n' "$1"
+}
+
+bootstrap_homebrew() {
+{{ if and .development (or (eq .chezmoi.os "darwin") (and (eq .chezmoi.os "linux") (ne .chezmoi.osRelease.id "arch"))) -}}
+    if command -v brew &> /dev/null; then
+        return
+    fi
+
+    log "Installing Homebrew"
     if [ "$OS" = "Linux" ]; then
         /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
         echo 'eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"' >> ~/.zprofile
@@ -19,60 +25,64 @@ if ! command -v brew &> /dev/null; then
     elif [ "$OS" = "Darwin" ]; then
         /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
     fi
-fi
-
-# Install packages with Homebrew
-if command -v brew &> /dev/null; then
-    echo "Installing packages with Homebrew..."
-    brew bundle --file=~/.config/packages/brewfile
-fi
+{{- else }}
+    return
 {{- end }}
-{{ end -}}
+}
 
+bootstrap_paru() {
+{{ if and (eq .chezmoi.os "linux") (eq .chezmoi.osRelease.id "arch") -}}
+    if command -v paru &> /dev/null; then
+        return
+    fi
 
-# Linux-specific packages (using native package manager)
-{{ if eq .chezmoi.os "linux" -}}
-{{- if eq .chezmoi.osRelease.id "arch" }}
-# Arch Linux: install paru (AUR helper) if not present
-if ! command -v paru &> /dev/null; then
-    echo "Installing paru..."
+    log "Installing paru"
     sudo pacman -S --needed --noconfirm base-devel git
     PARU_TMPDIR="$(mktemp -d)"
     git clone https://aur.archlinux.org/paru.git "$PARU_TMPDIR/paru"
     (cd "$PARU_TMPDIR/paru" && makepkg -si --noconfirm)
     rm -rf "$PARU_TMPDIR"
-fi
+{{- else }}
+    return
+{{- end }}
+}
 
-PKG_CMD="paru -S --needed --noconfirm"
+sync_arch_packages() {
+{{ if and (eq .chezmoi.os "linux") (eq .chezmoi.osRelease.id "arch") -}}
+    PKG_CMD="paru -S --needed --noconfirm"
 
-echo "Installing Arch Linux packages..."
-
-# Base packages
-$PKG_CMD \
+    log "Installing declared Arch packages"
+    $PKG_CMD \
 {{- range $name, $pkg := $pkgMapping }}
 {{- if and (hasKey $pkg "pacman") (eq $pkg.mode "base") }}
-    {{ $pkg.pacman }} \
+        {{ $pkg.pacman }} \
 {{- end }}
 {{- end }}
-    # end of base packages
+        # end of base packages
 
 {{ if .development }}
-# Development packages
-$PKG_CMD \
+    $PKG_CMD \
 {{- range $name, $pkg := $pkgMapping }}
 {{- if and (hasKey $pkg "pacman") (eq $pkg.mode "development") }}
-    {{ $pkg.pacman }} \
+        {{ $pkg.pacman }} \
 {{- end }}
 {{- end }}
-    # end of development packages
+        # end of development packages
 {{ end -}}
-
 {{- else }}
-if command -v apt &> /dev/null; then
-    echo "Installing Linux packages with apt..."
+    return
+{{- end }}
+}
+
+sync_apt_packages() {
+{{ if and (eq .chezmoi.os "linux") (ne .chezmoi.osRelease.id "arch") -}}
+    if ! command -v apt &> /dev/null; then
+        return
+    fi
+
+    log "Installing declared apt packages"
     sudo apt update
 
-    # Base packages
     sudo apt install -y \
 {{- range $name, $pkg := $pkgMapping }}
 {{- if and (hasKey $pkg "apt") (eq $pkg.mode "base") }}
@@ -82,7 +92,6 @@ if command -v apt &> /dev/null; then
         # end of base packages
 
 {{ if .development }}
-    # Build tools and development libraries (for mise/ruby-build etc.)
     sudo apt install -y \
 {{- range $name, $pkg := $pkgMapping }}
 {{- if and (hasKey $pkg "apt") (eq $pkg.mode "development") }}
@@ -102,57 +111,72 @@ if command -v apt &> /dev/null; then
 {{- end }}
         # end of desktop packages
 {{ end -}}
-fi
+{{- else }}
+    return
 {{- end }}
-{{ end -}}
+}
 
-# Desktop-specific packages
+install_desktop_apps() {
 {{ if .desktop -}}
-echo "Installing desktop applications..."
-
+    log "Installing desktop applications"
 {{ if eq .chezmoi.os "linux" -}}
-# Linux desktop apps
-if command -v flatpak &> /dev/null; then
-    flatpak install -y flathub \
-        com.visualstudio.code \
-        com.slack.Slack
-fi
-{{ end -}}
-
-{{ if eq .chezmoi.os "darwin" -}}
-# macOS desktop apps
-brew install --cask \
-    alacritty
-{{ end -}}
-{{ end -}}
-
-{{ if .development -}}
-# Install mise (development tool version manager)
-if ! command -v mise &> /dev/null; then
-    echo "Installing mise..."
-    curl https://mise.run | sh
-    if [ -f "$HOME/.config/zsh/.zshrc" ] && ! grep -q 'mise activate zsh' "$HOME/.config/zsh/.zshrc"; then
-        echo 'eval "$(~/.local/bin/mise activate zsh)"' >> "$HOME/.config/zsh/.zshrc"
+    if command -v flatpak &> /dev/null; then
+        flatpak install -y flathub \
+            com.visualstudio.code \
+            com.slack.Slack
     fi
-fi
+{{ end -}}
+{{ if eq .chezmoi.os "darwin" -}}
+    brew install --cask alacritty
+{{ end -}}
+{{- else }}
+    return
+{{- end }}
+}
 
-# Setup mise tools without overriding existing config
-if command -v mise &> /dev/null; then
+bootstrap_mise() {
+{{ if .development -}}
+    if command -v mise &> /dev/null; then
+        return
+    fi
+
+    log "Installing mise"
+    curl https://mise.run | sh
+{{- else }}
+    return
+{{- end }}
+}
+
+sync_mise_tools() {
+{{ if .development -}}
+    if ! command -v mise &> /dev/null; then
+        return
+    fi
+
+    log "Installing development runtimes with mise"
     mkdir -p "$HOME/.config/mise"
     if [ -f "$HOME/.config/mise/config.toml" ]; then
-        # Skip Ruby during bootstrap because source builds are slow.
         mise install bun node python go rust usage \
             npm:@openai/codex npm:ccusage
     else
         cat >"$HOME/.config/mise/config.toml" <<'EOF'
 {{ includeTemplate "dot_config/mise/config.toml.tmpl" . -}}
 EOF
-        # Skip Ruby during bootstrap because source builds are slow.
         mise install bun node python go rust usage \
             npm:@openai/codex npm:ccusage
     fi
-    echo "Skipping Ruby and Gemini CLI during bootstrap. Install later with: mise install ruby@3.4 npm:@google/gemini-cli"
-fi
-{{ end -}}
+    printf '%s\n' "Skipping Ruby and Gemini CLI during bootstrap. Install later with: mise install ruby@3.4 npm:@google/gemini-cli"
+{{- else }}
+    return
+{{- end }}
+}
 
-echo "Package installation completed!"
+bootstrap_homebrew
+bootstrap_paru
+sync_arch_packages
+sync_apt_packages
+install_desktop_apps
+bootstrap_mise
+sync_mise_tools
+
+log "Package installation completed"

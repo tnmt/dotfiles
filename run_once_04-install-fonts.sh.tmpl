@@ -1,102 +1,101 @@
 {{ if .desktop -}}
 #!/bin/bash
 
-# Install fonts for terminal
+# External/manual font installer for Linux fallback.
+# System packages and macOS font casks should come from package-mapping.toml.
+# Use this script only to install upstream font assets when package-manager delivery
+# is not the source of truth.
 set -e
 
-echo "Installing fonts..."
+log() {
+    printf '==> %s\n' "$1"
+}
 
-# Install Nerd Fonts
-install_nerd_fonts() {
-    local font_dir
-    
+font_dir() {
     if [[ "$OSTYPE" == "darwin"* ]]; then
-        font_dir="$HOME/Library/Fonts"
+        printf '%s\n' "$HOME/Library/Fonts"
     else
-        font_dir="$HOME/.local/share/fonts"
+        printf '%s\n' "$HOME/.local/share/fonts"
     fi
-    
-    mkdir -p "$font_dir"
-    
-    # Install MesloLGS Nerd Font (recommended for Powerlevel10k)
-    if ! ls "$font_dir"/MesloLGS* &>/dev/null; then
-        echo "Installing MesloLGS Nerd Font..."
-        local tmp_dir=$(mktemp -d)
+}
+
+install_nerd_fonts() {
+    local target_dir
+    target_dir="$(font_dir)"
+
+    mkdir -p "$target_dir"
+
+    if ! ls "$target_dir"/MesloLGS* &>/dev/null; then
+        log "Installing MesloLGS Nerd Font from upstream assets"
+        local tmp_dir
+        local style
+        local style_file
+        tmp_dir="$(mktemp -d)"
         cd "$tmp_dir"
-        
-        # Download MesloLGS NF fonts
+
         for style in Regular Bold Italic "Bold Italic"; do
             style_file=$(echo "$style" | sed 's/ /%20/g')
             curl -fLo "MesloLGS NF ${style}.ttf" \
                 "https://github.com/romkatv/powerlevel10k-media/raw/master/MesloLGS%20NF%20${style_file}.ttf"
         done
-        
-        # Move fonts to font directory
-        mv *.ttf "$font_dir/"
-        
-        # Clean up
+
+        mv *.ttf "$target_dir/"
         cd - >/dev/null
         rm -rf "$tmp_dir"
-        
-        echo "MesloLGS Nerd Font installed successfully"
+
+        log "MesloLGS Nerd Font installed successfully"
     else
-        echo "MesloLGS Nerd Font already installed"
+        log "MesloLGS Nerd Font already installed"
     fi
-    
-    # Install FiraCode Nerd Font
-    if ! ls "$font_dir"/FiraCode* &>/dev/null; then
-        echo "Installing FiraCode Nerd Font..."
-        local tmp_dir=$(mktemp -d)
-        cd "$tmp_dir"
-        
-        # Download latest FiraCode Nerd Font
-        curl -fLo FiraCode.zip \
-            "https://github.com/ryanoasis/nerd-fonts/releases/latest/download/FiraCode.zip"
-        
-        unzip -q FiraCode.zip
-        mv *.ttf "$font_dir/" 2>/dev/null || true
-        mv *.otf "$font_dir/" 2>/dev/null || true
-        
-        # Clean up
-        cd - >/dev/null
-        rm -rf "$tmp_dir"
-        
-        echo "FiraCode Nerd Font installed successfully"
-    else
-        echo "FiraCode Nerd Font already installed"
-    fi
-    
-    # Update font cache (Linux only)
-    if [[ "$OSTYPE" != "darwin"* ]]; then
-        if command -v fc-cache &>/dev/null; then
-            echo "Updating font cache..."
-            fc-cache -f "$font_dir"
+
+    if ! ls "$target_dir"/FiraCode* &>/dev/null; then
+        if ! command -v unzip &>/dev/null; then
+            printf '%s\n' "Warning: unzip not found, skipping FiraCode Nerd Font manual install." >&2
+        else
+            log "Installing FiraCode Nerd Font from upstream assets"
+            local tmp_dir
+            tmp_dir="$(mktemp -d)"
+            cd "$tmp_dir"
+
+            curl -fLo FiraCode.zip \
+                "https://github.com/ryanoasis/nerd-fonts/releases/latest/download/FiraCode.zip"
+
+            unzip -q FiraCode.zip
+            mv *.ttf "$target_dir/" 2>/dev/null || true
+            mv *.otf "$target_dir/" 2>/dev/null || true
+
+            cd - >/dev/null
+            rm -rf "$tmp_dir"
+
+            log "FiraCode Nerd Font installed successfully"
         fi
+    else
+        log "FiraCode Nerd Font already installed"
+    fi
+
+    if [[ "$OSTYPE" != "darwin"* ]] && command -v fc-cache &>/dev/null; then
+        log "Updating font cache"
+        fc-cache -f "$target_dir"
     fi
 }
 
-# Install using package manager if available
-if command -v brew &>/dev/null; then
-    echo "Installing fonts with Homebrew..."
-    brew tap homebrew/cask-fonts 2>/dev/null || true
-    brew install --cask font-meslo-lg-nerd-font 2>/dev/null || true
-    brew install --cask font-fira-code-nerd-font 2>/dev/null || true
-elif command -v apt &>/dev/null; then
-    echo "Installing system fonts with apt..."
-    sudo apt update
-    sudo apt install -y fonts-powerline fonts-firacode unzip
-    # Still need to install Nerd Font variants manually
-    install_nerd_fonts
-else
-    echo "No package manager found, installing fonts manually..."
-    install_nerd_fonts
+if [[ "$OSTYPE" == "darwin"* ]]; then
+    log "Skipping manual font install on macOS; use Homebrew casks from package-mapping.toml"
+    exit 0
 fi
 
-echo "Font installation completed!"
-echo ""
-echo "Recommended fonts for terminals:"
-echo "  - MesloLGS Nerd Font (best for Powerlevel10k)"
-echo "  - FiraCode Nerd Font (good ligatures support)"
-echo ""
-echo "You may need to restart your terminal and select the font in preferences."
+if command -v pacman &>/dev/null; then
+    log "Skipping manual font install on Arch; use pacman packages from package-mapping.toml"
+    exit 0
+fi
+
+install_nerd_fonts
+
+log "Font installation completed"
+printf '%s\n' ""
+printf '%s\n' "Recommended fonts for terminals:"
+printf '%s\n' "  - MesloLGS Nerd Font (best for Powerlevel10k)"
+printf '%s\n' "  - FiraCode Nerd Font (good ligatures support)"
+printf '%s\n' ""
+printf '%s\n' "You may need to restart your terminal and select the font in preferences."
 {{ end -}}

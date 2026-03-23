@@ -1,19 +1,29 @@
 #!/bin/bash
 
-# Install Starship prompt
+# External installer for Starship prompt.
+# Keep package-manager sync in run_once_01; use this only for tools that intentionally
+# follow the upstream installer instead of package-mapping.toml.
 set -e
 
-if command -v starship &> /dev/null; then
-    echo "Starship is already installed. Version: $(starship --version)"
-    exit 0
-fi
+log() {
+    printf '==> %s\n' "$1"
+}
 
-echo "Installing Starship..."
-curl -sS https://starship.rs/install.sh | sh -s -- --yes --bin-dir "$HOME/.local/bin"
+install_starship() {
+    if command -v starship &> /dev/null; then
+        log "Starship is already installed: $(starship --version)"
+        return
+    fi
 
-if command -v starship &> /dev/null; then
-    echo "Starship installation completed successfully!"
-else
-    echo "Error: Starship installation failed"
-    exit 1
-fi
+    log "Installing Starship with the official installer"
+    curl -sS https://starship.rs/install.sh | sh -s -- --yes --bin-dir "$HOME/.local/bin"
+
+    if ! command -v starship &> /dev/null; then
+        printf '%s\n' "Error: Starship installation failed" >&2
+        exit 1
+    fi
+
+    log "Starship installation completed successfully"
+}
+
+install_starship

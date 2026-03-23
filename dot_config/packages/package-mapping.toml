@@ -122,6 +122,11 @@ apt_cmd = "fdfind"
 pacman = "fd"
 mode = "base"
 
+[xclip]
+apt = "xclip"
+pacman = "xclip"
+mode = "desktop"
+
 # =============================================================================
 # Development packages
 # =============================================================================
@@ -283,10 +288,28 @@ mode = "development"
 
 [fonts-powerline]
 apt = "fonts-powerline"
+pacman = "powerline-fonts"
 mode = "desktop"
 
 [fonts-firacode]
 apt = "fonts-firacode"
+mode = "desktop"
+
+[font-meslo-lg-nerd-font]
+cask = "font-meslo-lg-nerd-font"
+tap = "homebrew/cask-fonts"
+pacman = "ttf-meslo-nerd"
+mode = "desktop"
+
+[font-fira-code-nerd-font]
+cask = "font-fira-code-nerd-font"
+tap = "homebrew/cask-fonts"
+pacman = "ttf-firacode-nerd"
+mode = "desktop"
+
+[unzip]
+apt = "unzip"
+pacman = "unzip"
 mode = "desktop"
 
 [exiftool]

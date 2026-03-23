@@ -1,7 +1,7 @@
 {{ if .development -}}
 #!/bin/bash
 
-# Setup Neovim
+# Post-install setup for Neovim language providers and tools
 set -e
 
 STATE_FILE="$HOME/.local/state/nvim/setup.done"
@@ -15,17 +15,9 @@ echo "Setting up Neovim..."
 # Create backup directory for vim
 mkdir -p ~/.vimbackup
 
-# Install Neovim if not installed
 if ! command -v nvim &> /dev/null; then
-    echo "Installing Neovim..."
-    if command -v pacman &> /dev/null; then
-        sudo pacman -S --needed --noconfirm neovim
-    elif command -v brew &> /dev/null; then
-        brew install neovim
-    else
-        echo "Please install neovim manually"
-        exit 1
-    fi
+    echo "Neovim is not installed. Install declared packages first."
+    exit 1
 fi
 
 # Install dependencies for Neovim
@@ -50,15 +42,6 @@ fi
 
 # Install language servers and tools
 echo "Installing language servers and development tools..."
-
-# Install ripgrep and fd for Telescope
-if command -v pacman &> /dev/null; then
-    sudo pacman -S --needed --noconfirm ripgrep fd
-elif command -v brew &> /dev/null; then
-    brew install ripgrep fd
-elif command -v apt &> /dev/null; then
-    sudo apt install -y ripgrep fd-find
-fi
 
 # Install formatters and linters
 if command -v pip3 &> /dev/null; then

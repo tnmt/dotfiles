@@ -1,39 +1,22 @@
 #!/bin/bash
 
-# Setup tmux and TPM (Tmux Plugin Manager)
+# Post-install setup for tmux and TPM (Tmux Plugin Manager)
 set -e
 
 echo "Setting up tmux..."
 
-# Install tmux if not installed
 if ! command -v tmux &> /dev/null; then
-    echo "Installing tmux..."
-    if command -v pacman &> /dev/null; then
-        sudo pacman -S --needed --noconfirm tmux
-    elif command -v brew &> /dev/null; then
-        brew install tmux
-    elif command -v apt &> /dev/null; then
-        sudo apt update && sudo apt install -y tmux
-    else
-        echo "Please install tmux manually"
-        exit 1
-    fi
+    echo "tmux is not installed. Install declared packages first."
+    exit 1
 fi
 
 {{ if .desktop -}}
-# Install clipboard tools for tmux-yank
-echo "Installing clipboard utilities..."
+# Clipboard utilities are expected to come from package-mapping.toml.
 {{- if eq .chezmoi.os "darwin" }}
-# macOS has pbcopy/pbpaste built-in
 echo "Using built-in pbcopy/pbpaste on macOS"
 {{- else }}
-# Linux: install xclip or xsel
 if ! command -v xclip &> /dev/null && ! command -v xsel &> /dev/null; then
-    if command -v pacman &> /dev/null; then
-        sudo pacman -S --needed --noconfirm xclip
-    elif command -v apt &> /dev/null; then
-        sudo apt install -y xclip
-    fi
+    echo "Clipboard integration may not work until xclip or xsel is installed."
 fi
 {{- end }}
 {{ end -}}

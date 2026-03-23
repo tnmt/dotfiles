@@ -38,6 +38,17 @@ OS の振り分けは自動:
 - `brew` は明示定義を推奨（現行テンプレートは `brew` キーがある項目のみ Brewfile に出力）
 - 現在の方針は基本的に最新追従（バージョン固定は未導入）
 - Homebrew / mise / paru 本体の導入は `package-mapping.toml` 管理外で、セットアップスクリプト側で実行
+- 通常パッケージの導入元は `package-mapping.toml` を正とし、`run_once_*` 側で重複インストールを増やさない
+
+### 責務ルール
+
+- `package-mapping.toml` は通常パッケージの唯一の宣言元
+- `run_once_01-install-packages.sh.tmpl` は bootstrap と apt/pacman sync に限定
+- `run_onchange_03-brew-bundle.sh.tmpl` は Brewfile 変更時の brew sync を担当
+- `run_once_05-*` 以降は post-install のみとし、通常パッケージ導入を足さない
+- 例外は Homebrew, paru, mise, 1Password apt repo のような bootstrap 処理
+- `run_once_02-install-starship.sh` と `run_once_07-install-claude-cli.sh.tmpl` は upstream installer を使う外部ツール例外
+- `run_once_04-install-fonts.sh.tmpl` は Ubuntu 系などで manifest だけでは足りない upstream font asset の manual fallback
 
 ### よくあるパターン
 
@@ -93,8 +104,8 @@ mode = "development"
 - `run_once_02-install-starship.sh` - Starship インストール
 - `run_onchange_03-brew-bundle.sh.tmpl` - Brewfile 変更時に brew bundle 実行
 - `run_once_04-install-fonts.sh.tmpl` - フォントインストール
-- `run_once_05-setup-tmux.sh.tmpl` - tmux セットアップ
-- `run_once_06-setup-nvim.sh.tmpl` - Neovim セットアップ
+- `run_once_05-setup-tmux.sh.tmpl` - tmux post-install セットアップ (TPM 導入など)
+- `run_once_06-setup-nvim.sh.tmpl` - Neovim post-install セットアップ (provider / formatter など)
 - `run_once_07-install-claude-cli.sh.tmpl` - Claude CLI インストール
 - `run_once_08-update-completions.sh` - 補完ファイル更新
 - `run_onchange_99-install-bat-theme.sh` - bat テーマインストール

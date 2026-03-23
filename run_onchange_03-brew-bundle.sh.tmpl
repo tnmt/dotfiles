@@ -2,10 +2,12 @@
 #!/bin/sh
 set -e
 
-# Run brew bundle when Brewfile changes
+# Sync declared Homebrew packages after Brewfile changes.
+# Homebrew bootstrap lives in run_once_01-install-packages.sh.tmpl.
 BREWFILE="$HOME/.config/packages/brewfile"
 
 if [ -x "$(command -v brew)" ] && [ -f "$BREWFILE" ]; then
+  printf '==> %s\n' "Installing declared Homebrew packages"
   brew bundle --file="$BREWFILE"
 fi
 {{ end -}}

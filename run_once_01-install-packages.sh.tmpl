@@ -33,12 +33,17 @@ fi
 # Linux-specific packages (using native package manager)
 {{ if eq .chezmoi.os "linux" -}}
 {{- if eq .chezmoi.osRelease.id "arch" }}
-# Arch Linux: use paru (or pacman)
-if command -v paru &> /dev/null; then
-    PKG_CMD="paru -S --needed --noconfirm"
-else
-    PKG_CMD="sudo pacman -S --needed --noconfirm"
+# Arch Linux: install paru (AUR helper) if not present
+if ! command -v paru &> /dev/null; then
+    echo "Installing paru..."
+    sudo pacman -S --needed --noconfirm base-devel git
+    PARU_TMPDIR="$(mktemp -d)"
+    git clone https://aur.archlinux.org/paru.git "$PARU_TMPDIR/paru"
+    (cd "$PARU_TMPDIR/paru" && makepkg -si --noconfirm)
+    rm -rf "$PARU_TMPDIR"
 fi
+
+PKG_CMD="paru -S --needed --noconfirm"
 
 echo "Installing Arch Linux packages..."
 

@@ -69,6 +69,16 @@ sync_arch_packages() {
 {{- end }}
         # end of development packages
 {{ end -}}
+
+{{ if .desktop }}
+    $PKG_CMD \
+{{- range $name, $pkg := $pkgMapping }}
+{{- if and (hasKey $pkg "pacman") (eq $pkg.mode "desktop") }}
+        {{ $pkg.pacman }} \
+{{- end }}
+{{- end }}
+        # end of desktop packages
+{{ end -}}
 {{- else }}
     return
 {{- end }}

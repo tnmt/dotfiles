@@ -1,0 +1,35 @@
+* {
+  border: none;
+  border-radius: 0;
+  font-family: "MesloLGS Nerd Font", "FiraCode Nerd Font", sans-serif;
+  font-size: 13px;
+  min-height: 0;
+}
+
+window#waybar {
+  background: rgba(36, 40, 59, 0.88);
+  color: #c0caf5;
+  border-radius: 10px;
+}
+
+#workspaces {
+  margin: 0 8px;
+}
+
+#workspaces button {
+  padding: 0 8px;
+  color: #a9b1d6;
+}
+
+#workspaces button.active {
+  color: #7aa2f7;
+}
+
+#window,
+#clock,
+#pulseaudio,
+#backlight,
+#battery,
+#tray {
+  padding: 0 10px;
+}

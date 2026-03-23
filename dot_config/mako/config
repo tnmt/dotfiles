@@ -1,0 +1,14 @@
+sort=-time
+layer=overlay
+anchor=top-right
+font=MesloLGS Nerd Font 12
+background-color=#24283bee
+text-color=#c0caf5ff
+border-color=#7aa2f7ff
+border-size=2
+border-radius=10
+default-timeout=5000
+width=360
+height=120
+padding=12
+margin=12

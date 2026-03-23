@@ -1,0 +1,10 @@
+show=drun
+prompt=Run
+width=720
+height=420
+term=alacritty
+gtk_dark=true
+normal_window=true
+allow_images=true
+insensitive=true
+hide_scroll=true

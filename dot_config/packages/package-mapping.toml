@@ -314,3 +314,88 @@ mode = "desktop"
 brew = "exiftool"
 apt = "libimage-exiftool-perl"
 mode = "desktop"
+
+[hyprland]
+pacman = "hyprland"
+mode = "desktop"
+
+[ghostty]
+pacman = "ghostty"
+mode = "desktop"
+
+[alacritty]
+brew = "alacritty"
+pacman = "alacritty"
+mode = "desktop"
+
+[xdg-desktop-portal-hyprland]
+pacman = "xdg-desktop-portal-hyprland"
+mode = "desktop"
+
+[xdg-desktop-portal-gtk]
+pacman = "xdg-desktop-portal-gtk"
+mode = "desktop"
+
+[waybar]
+pacman = "waybar"
+mode = "desktop"
+
+[wofi]
+pacman = "wofi"
+mode = "desktop"
+
+[mako]
+pacman = "mako"
+mode = "desktop"
+
+[hyprpaper]
+pacman = "hyprpaper"
+mode = "desktop"
+
+[hypridle]
+pacman = "hypridle"
+mode = "desktop"
+
+[hyprlock]
+pacman = "hyprlock"
+mode = "desktop"
+
+[wl-clipboard]
+pacman = "wl-clipboard"
+mode = "desktop"
+
+[grim]
+pacman = "grim"
+mode = "desktop"
+
+[slurp]
+pacman = "slurp"
+mode = "desktop"
+
+[brightnessctl]
+pacman = "brightnessctl"
+mode = "desktop"
+
+[playerctl]
+pacman = "playerctl"
+mode = "desktop"
+
+[polkit-kde-agent]
+pacman = "polkit-kde-agent"
+mode = "desktop"
+
+[qt5-wayland]
+pacman = "qt5-wayland"
+mode = "desktop"
+
+[qt6-wayland]
+pacman = "qt6-wayland"
+mode = "desktop"
+
+[wireplumber]
+pacman = "wireplumber"
+mode = "desktop"
+
+[pipewire-pulse]
+pacman = "pipewire-pulse"
+mode = "desktop"

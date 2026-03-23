@@ -37,7 +37,7 @@ OS の振り分けは自動:
 
 - `brew` は明示定義を推奨（現行テンプレートは `brew` キーがある項目のみ Brewfile に出力）
 - 現在の方針は基本的に最新追従（バージョン固定は未導入）
-- Homebrew / mise 本体の導入は `package-mapping.toml` 管理外で、セットアップスクリプト側で実行
+- Homebrew / mise / paru 本体の導入は `package-mapping.toml` 管理外で、セットアップスクリプト側で実行
 
 ### よくあるパターン
 
@@ -64,6 +64,11 @@ darwin_only = true
 [パッケージ名]
 apt = "apt名"
 mode = "development"
+
+# pacman のみ・Arch 限定
+[パッケージ名]
+pacman = "pacman名"
+mode = "development"
 ```
 
 ### 自動生成されるファイル
@@ -83,8 +88,8 @@ mode = "development"
 ## スクリプト実行順序
 
 数値プレフィックスで制御:
-- `run_once_00-setup-1password-apt.sh.tmpl` - 1Password apt リポジトリセットアップ
-- `run_once_01-install-packages.sh.tmpl` - パッケージインストール
+- `run_once_00-setup-1password-apt.sh.tmpl` - 1Password apt リポジトリセットアップ (Ubuntu のみ、Arch ではスキップ)
+- `run_once_01-install-packages.sh.tmpl` - パッケージインストール (Arch: paru 自動導入 → pacman/paru、Ubuntu: apt + Linuxbrew)
 - `run_once_02-install-starship.sh` - Starship インストール
 - `run_onchange_03-brew-bundle.sh.tmpl` - Brewfile 変更時に brew bundle 実行
 - `run_once_04-install-fonts.sh.tmpl` - フォントインストール

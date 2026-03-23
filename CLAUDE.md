@@ -79,8 +79,13 @@ mode = "development"
 ## スクリプト実行順序
 
 数値プレフィックスで制御:
+- `run_once_00-setup-1password-apt.sh.tmpl` - 1Password apt リポジトリセットアップ
 - `run_once_01-install-packages.sh.tmpl` - パッケージインストール
-- `run_onchange_02-brew-bundle.sh.tmpl` - Brewfile 変更時に brew bundle 実行
-- `run_once_04-setup-tmux.sh.tmpl` - tmux セットアップ
-- `run_once_05-setup-nvim.sh.tmpl` - Neovim セットアップ
-- `run_once_06-install-claude-cli.sh.tmpl` - Claude CLI インストール
+- `run_once_02-install-starship.sh` - Starship インストール
+- `run_onchange_03-brew-bundle.sh.tmpl` - Brewfile 変更時に brew bundle 実行
+- `run_once_04-install-fonts.sh.tmpl` - フォントインストール
+- `run_once_05-setup-tmux.sh.tmpl` - tmux セットアップ
+- `run_once_06-setup-nvim.sh.tmpl` - Neovim セットアップ
+- `run_once_07-install-claude-cli.sh.tmpl` - Claude CLI インストール
+- `run_once_08-update-completions.sh` - 補完ファイル更新
+- `run_onchange_99-install-bat-theme.sh` - bat テーマインストール

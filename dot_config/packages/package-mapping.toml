@@ -6,13 +6,15 @@
 #   cask        - Homebrew cask name (optional)
 #   apt         - apt package name (optional, omit if no apt package)
 #   apt_cmd     - Command name on apt if different from package name
+#   pacman      - pacman package name (optional, omit if no pacman package)
 #   mode        - Installation mode: "base", "development", "desktop"
 #   tap         - Homebrew tap (e.g. "k1LoW/tap"), omit if not needed
 #   darwin_only - true = brew install on macOS only, skip on Linux (default: false)
 #
 # OS routing (automatic):
-#   macOS  -> brew/cask (if brew or cask field exists)
-#   Linux  -> apt (if apt field exists), otherwise brew (unless darwin_only)
+#   macOS       -> brew/cask (if brew or cask field exists)
+#   Linux/Arch  -> pacman (if pacman field exists)
+#   Linux/other -> apt (if apt field exists), otherwise brew (unless darwin_only)
 
 # =============================================================================
 # Base packages
@@ -20,57 +22,68 @@
 
 [zsh]
 apt = "zsh"
+pacman = "zsh"
 mode = "base"
 
 [fzf]
 brew = "fzf"
 apt = "fzf"
+pacman = "fzf"
 mode = "base"
 
 [direnv]
 brew = "direnv"
 apt = "direnv"
+pacman = "direnv"
 mode = "base"
 
 [git]
 brew = "git"
 apt = "git"
+pacman = "git"
 mode = "base"
 
 [delta]
 brew = "delta"
 apt = "git-delta"
+pacman = "git-delta"
 mode = "base"
 
 [tmux]
 brew = "tmux"
 apt = "tmux"
+pacman = "tmux"
 mode = "base"
 
 [gh]
 brew = "gh"
 apt = "gh"
+pacman = "github-cli"
 mode = "base"
 
 [ripgrep]
 brew = "ripgrep"
 apt = "ripgrep"
+pacman = "ripgrep"
 mode = "base"
 
 [eza]
 brew = "eza"
 apt = "eza"
+pacman = "eza"
 mode = "base"
 
 [bat]
 brew = "bat"
 apt = "bat"
 apt_cmd = "batcat"
+pacman = "bat"
 mode = "base"
 
 [zoxide]
 brew = "zoxide"
 apt = "zoxide"
+pacman = "zoxide"
 mode = "base"
 
 [atuin]
@@ -80,27 +93,32 @@ mode = "development"
 [jq]
 brew = "jq"
 apt = "jq"
+pacman = "jq"
 mode = "base"
 
 [yq]
 brew = "yq"
 apt = "yq"
+pacman = "go-yq"
 mode = "base"
 
 [tig]
 brew = "tig"
 apt = "tig"
+pacman = "tig"
 mode = "base"
 
 [gpg]
 brew = "gpg"
 apt = "gpg"
+pacman = "gnupg"
 mode = "base"
 
 [fd]
 brew = "fd"
 apt = "fd-find"
 apt_cmd = "fdfind"
+pacman = "fd"
 mode = "base"
 
 # =============================================================================

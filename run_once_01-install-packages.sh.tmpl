@@ -8,6 +8,7 @@ OS="$(uname -s)"
 {{- $pkgMapping := include "dot_config/packages/package-mapping.toml" | fromToml }}
 
 {{ if .development -}}
+{{- if or (eq .chezmoi.os "darwin") (and (eq .chezmoi.os "linux") (ne .chezmoi.osRelease.id "arch")) }}
 # Install Homebrew if not installed
 if ! command -v brew &> /dev/null; then
     echo "Installing Homebrew..."
@@ -25,11 +26,32 @@ if command -v brew &> /dev/null; then
     echo "Installing packages with Homebrew..."
     brew bundle --file=~/.config/packages/brewfile
 fi
+{{- end }}
 {{ end -}}
 
 
 # Linux-specific packages (using native package manager)
 {{ if eq .chezmoi.os "linux" -}}
+{{- if eq .chezmoi.osRelease.id "arch" }}
+# Arch Linux: use paru (or pacman)
+if command -v paru &> /dev/null; then
+    PKG_CMD="paru -S --needed --noconfirm"
+else
+    PKG_CMD="sudo pacman -S --needed --noconfirm"
+fi
+
+echo "Installing Arch Linux packages..."
+
+# Base packages
+$PKG_CMD \
+{{- range $name, $pkg := $pkgMapping }}
+{{- if and (hasKey $pkg "pacman") (eq $pkg.mode "base") }}
+    {{ $pkg.pacman }} \
+{{- end }}
+{{- end }}
+    # end of base packages
+
+{{- else }}
 if command -v apt &> /dev/null; then
     echo "Installing Linux packages with apt..."
     sudo apt update
@@ -65,6 +87,7 @@ if command -v apt &> /dev/null; then
         # end of desktop packages
 {{ end -}}
 fi
+{{- end }}
 {{ end -}}
 
 # Desktop-specific packages

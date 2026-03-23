@@ -15,13 +15,15 @@ chezmoi で管理する dotfiles リポジトリ。詳細は README.md を参照
 | `brew` | Homebrew パッケージ名 | (省略で brew 出力なし) |
 | `apt` | apt パッケージ名 | (省略で apt なし) |
 | `apt_cmd` | apt 側のコマンド名が異なる場合 | (省略で apt と同じ) |
+| `pacman` | pacman パッケージ名 (Arch Linux) | (省略で pacman なし) |
 | `tap` | Homebrew tap (例: `k1LoW/tap`) | (省略で tap なし) |
 | `mode` | `base` / `development` / `desktop` | 必須 |
 | `darwin_only` | `true` で macOS のみ brew インストール | `false` |
 
 OS の振り分けは自動:
 - macOS: `brew` が定義されているパッケージを brew でインストール
-- Linux: `apt` があれば apt を優先、`apt` がなければ brew を利用
+- Linux (Arch): `pacman` があれば pacman/paru でインストール（Linuxbrew 不使用）
+- Linux (Ubuntu 等): `apt` があれば apt を優先、`apt` がなければ brew を利用
 - Linux + `darwin_only=true`: brew でもインストールしない
 
 ### パッケージ追加の手順
@@ -40,10 +42,11 @@ OS の振り分けは自動:
 ### よくあるパターン
 
 ```toml
-# macOS は brew、Linux は apt (最も一般的)
+# macOS は brew、Linux は apt/pacman (最も一般的)
 [パッケージ名]
 brew = "brew名"
 apt = "apt名"
+pacman = "pacman名"
 mode = "development"
 
 # brew のみ・全 OS (apt にパッケージが無い場合)
@@ -66,7 +69,7 @@ mode = "development"
 ### 自動生成されるファイル
 
 - `dot_config/packages/brewfile.tmpl` → `~/.config/packages/brewfile`
-- `run_once_01-install-packages.sh.tmpl` 内の apt install リスト
+- `run_once_01-install-packages.sh.tmpl` 内の apt / pacman install リスト
 
 ## セットアップモード
 

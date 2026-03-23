@@ -88,6 +88,7 @@ mode = "base"
 
 [atuin]
 brew = "atuin"
+pacman = "atuin"
 mode = "development"
 
 [jq]
@@ -127,67 +128,81 @@ mode = "base"
 
 [neovim]
 brew = "neovim"
+pacman = "neovim"
 mode = "development"
 
 [luarocks]
 brew = "luarocks"
+pacman = "luarocks"
 mode = "development"
 
 [the_platinum_searcher]
 brew = "the_platinum_searcher"
+pacman = "the_platinum_searcher"
 mode = "development"
 
 [ghq]
 brew = "ghq"
+pacman = "ghq"
 mode = "development"
 
 [hub]
 brew = "hub"
 apt = "hub"
+pacman = "hub"
 mode = "development"
 
 [tree]
 brew = "tree"
 apt = "tree"
+pacman = "tree"
 mode = "development"
 
 [wget]
 brew = "wget"
 apt = "wget"
+pacman = "wget"
 mode = "development"
 
 [1password-cli]
 cask = "1password-cli"
 apt = "1password-cli"
+pacman = "1password-cli"
 mode = "development"
 
-# Build tools (apt only)
+# Build tools
 [software-properties-common]
 apt = "software-properties-common"
 mode = "development"
 
 [build-essential]
 apt = "build-essential"
+pacman = "base-devel"
 mode = "development"
 
 [zlib1g-dev]
 apt = "zlib1g-dev"
+pacman = "zlib"
 mode = "development"
 
 [libffi-dev]
 apt = "libffi-dev"
+pacman = "libffi"
 mode = "development"
 
 [libyaml-dev]
 apt = "libyaml-dev"
+pacman = "libyaml"
 mode = "development"
 
 [libreadline-dev]
 apt = "libreadline-dev"
+pacman = "readline"
 mode = "development"
 
 [libssl-dev]
 apt = "libssl-dev"
+pacman = "openssl"
 mode = "development"
 
 # =============================================================================
@@ -244,18 +259,22 @@ darwin_only = true
 
 [kubectl]
 brew = "kubectl"
+pacman = "kubectl"
 mode = "development"
 
 [helm]
 brew = "helm"
+pacman = "helm"
 mode = "development"
 
 [terraform]
 brew = "terraform"
+pacman = "terraform"
 mode = "development"
 
 [hugo]
 brew = "hugo"
+pacman = "hugo"
 mode = "development"
 
 # =============================================================================

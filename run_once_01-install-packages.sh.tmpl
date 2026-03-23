@@ -51,6 +51,17 @@ $PKG_CMD \
 {{- end }}
     # end of base packages
 
+{{ if .development }}
+# Development packages
+$PKG_CMD \
+{{- range $name, $pkg := $pkgMapping }}
+{{- if and (hasKey $pkg "pacman") (eq $pkg.mode "development") }}
+    {{ $pkg.pacman }} \
+{{- end }}
+{{- end }}
+    # end of development packages
+{{ end -}}
+
 {{- else }}
 if command -v apt &> /dev/null; then
     echo "Installing Linux packages with apt..."

@@ -1,0 +1,40 @@
+{{- if eq .chezmoi.osRelease.id "arch" -}}
+#!/bin/bash
+
+# On Arch (Omarchy), the base git/tmux configs are managed by Omarchy.
+# Inject include/source-file directives so chezmoi-managed local overlays
+# are loaded on top of Omarchy defaults.
+
+set -eu
+
+ensure_git_include() {
+    local git_config local_gitconfig
+
+    git_config="$HOME/.config/git/config"
+    local_gitconfig="$HOME/.config/git/config.local"
+
+    mkdir -p "$(dirname "$git_config")"
+    touch "$git_config"
+
+    if ! git config --file "$git_config" --get-all include.path 2>/dev/null | grep -Fxq "$local_gitconfig"; then
+        git config --file "$git_config" --add include.path "$local_gitconfig"
+    fi
+}
+
+ensure_tmux_include() {
+    local tmux_config local_tmux
+
+    tmux_config="$HOME/.config/tmux/tmux.conf"
+    local_tmux="$HOME/.config/tmux/local.conf"
+
+    mkdir -p "$(dirname "$tmux_config")"
+    touch "$tmux_config"
+
+    if ! grep -Fqx "source-file $local_tmux" "$tmux_config"; then
+        printf '\n# chezmoi local overrides\nsource-file %s\n' "$local_tmux" >>"$tmux_config"
+    fi
+}
+
+ensure_git_include
+ensure_tmux_include
+{{ end -}}

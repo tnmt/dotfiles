@@ -1,4 +1,4 @@
-# Git configuration
+# Personal Git overrides layered on top of Omarchy's base config.
 
 [user]
   email = {{ .email }}
@@ -13,8 +13,6 @@
   excludesfile = ~/.config/git/ignore
 
 [push]
-  # remoteに同じbranch名でpushする
-  # upstreamの設定を要求しない
   default = current
 
 [pull]
@@ -64,6 +62,3 @@
 
 [fetch]
   prune = true
-
-[include]
-  path = ~/.config/git/config.local

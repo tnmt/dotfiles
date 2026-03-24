@@ -20,7 +20,10 @@ require("config.keymaps")
 require("config.autocmds")
 
 -- Plugin management
-require("lazy").setup("plugins", {
+require("lazy").setup({
+  { "LazyVim/LazyVim", import = "lazyvim.plugins" },
+  { import = "plugins" },
+}, {
   defaults = {
     lazy = false,
     version = false,

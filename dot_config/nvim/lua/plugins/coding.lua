@@ -22,8 +22,8 @@ return {
   {
     "neovim/nvim-lspconfig",
     dependencies = {
-      "williamboman/mason.nvim",
-      "williamboman/mason-lspconfig.nvim",
+      "mason-org/mason.nvim",
+      "mason-org/mason-lspconfig.nvim",
       "folke/neodev.nvim",
     },
     config = function()
@@ -161,35 +161,6 @@ return {
           end,
         },
       })
-    end,
-  },
-
-  -- Formatter/Linter
-  {
-    "nvimtools/none-ls.nvim",
-    dependencies = { "mason.nvim" },
-    event = { "BufReadPre", "BufNewFile" },
-    opts = function()
-      local null_ls = require("null-ls")
-      return {
-        sources = {
-          -- Formatting
-          null_ls.builtins.formatting.black,
-          null_ls.builtins.formatting.prettier,
-          null_ls.builtins.formatting.stylua,
-          null_ls.builtins.formatting.gofmt,
-          
-          -- Diagnostics
-          null_ls.builtins.diagnostics.rubocop,
-        },
-        on_attach = function(client, bufnr)
-          if client.supports_method("textDocument/formatting") then
-            vim.keymap.set("n", "<leader>cf", function()
-              vim.lsp.buf.format({ bufnr = bufnr })
-            end, { buffer = bufnr, desc = "Format buffer" })
-          end
-        end,
-      }
     end,
   },
 

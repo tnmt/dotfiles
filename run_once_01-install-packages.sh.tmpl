@@ -11,6 +11,10 @@ log() {
     printf '==> %s\n' "$1"
 }
 
+warn() {
+    printf 'WARNING: %s\n' "$1" >&2
+}
+
 bootstrap_homebrew() {
 {{ if and .development (or (eq .chezmoi.os "darwin") (and (eq .chezmoi.os "linux") (ne .chezmoi.osRelease.id "arch"))) -}}
     if command -v brew &> /dev/null; then
@@ -156,15 +160,19 @@ sync_mise_tools() {
     log "Installing development runtimes with mise"
     mkdir -p "$HOME/.config/mise"
     if [ -f "$HOME/.config/mise/config.toml" ]; then
-        mise install bun node python go rust usage \
-            npm:@openai/codex npm:ccusage
+        :
     else
         cat >"$HOME/.config/mise/config.toml" <<'EOF'
 {{ includeTemplate "dot_config/mise/config.toml.tmpl" . -}}
 EOF
-        mise install bun node python go rust usage \
-            npm:@openai/codex npm:ccusage
     fi
+    if ! mise install bun node python go rust usage \
+        npm:@openai/codex npm:ccusage; then
+        warn "mise runtime install failed. Continuing chezmoi apply."
+        warn "Retry manually with: mise install bun node python go rust usage npm:@openai/codex npm:ccusage"
+        return 0
+    fi
+    mise reshim
     printf '%s\n' "Skipping Ruby and Gemini CLI during bootstrap. Install later with: mise install ruby@3.4 npm:@google/gemini-cli"
 {{- else }}
     return

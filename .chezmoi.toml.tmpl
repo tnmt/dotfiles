@@ -3,12 +3,14 @@
 {{- $hostname := .chezmoi.hostname -}}
 {{- $desktop := promptBoolOnce . "desktop" "Is this a desktop machine" -}}
 {{- $development := promptBoolOnce . "development" "Development environment (Homebrew, mise, nvim, etc.)" -}}
+{{- $omarchy := stat (joinPath .chezmoi.homeDir ".local/share/omarchy") | not | not -}}
 [data]
     email = {{ $email | quote }}
     name = {{ $name | quote }}
     hostname = {{ $hostname | quote }}
     desktop = {{ $desktop }}
     development = {{ $development }}
+    omarchy = {{ $omarchy }}
 {{- if not $desktop }}
 
 [onepassword]

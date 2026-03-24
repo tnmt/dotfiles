@@ -12,11 +12,12 @@ LICENSE
 .local/bin/rename-for-dropbox
 {{ end }}
 
-{{ if or (not .desktop) (eq .chezmoi.osRelease.id "arch") }}
+{{ $isArch := and (hasKey .chezmoi.osRelease "id") (eq .chezmoi.osRelease.id "arch") -}}
+{{ if or (not .desktop) $isArch }}
 .config/alacritty/alacritty.toml
 .config/ghostty/config
 {{ end }}
-{{ if eq .chezmoi.osRelease.id "arch" }}
+{{ if $isArch }}
 .config/starship.toml
 .config/git/config
 .config/tmux/tmux.conf

@@ -21,4 +21,5 @@ LICENSE
 .config/starship.toml
 .config/git/config
 .config/tmux/tmux.conf
+.config/nvim
 {{ end }}

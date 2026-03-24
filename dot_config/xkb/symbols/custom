@@ -1,0 +1,7 @@
+// US layout with JIS key fixes
+default partial alphanumeric_keys
+xkb_symbols "basic" {
+    include "us(basic)"
+    key <AE13> { [ backslash, bar ] };
+    key <AB11> { [ grave, asciitilde ] };
+};

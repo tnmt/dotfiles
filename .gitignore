@@ -17,6 +17,9 @@
 # Chezmoi working files
 .chezmoi.toml.lock
 
+# Generated theme files
+dot_config/theme/generated/
+
 # OS-specific
 Thumbs.db
 .Spotlight-V100

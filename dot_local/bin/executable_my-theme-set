@@ -114,11 +114,27 @@ install_configs() {
 
   # Hyprland: source-able color config
   cp "$THEME_DIR/generated/hyprland.conf" "$HOME/.config/hypr/theme.conf"
+
+  # Ghostty: swap theme name
+  local ghostty_config="$HOME/.config/ghostty/config"
+  local ghostty_map="$THEME_DIR/ghostty-themes.toml"
+  if [[ -f "$ghostty_config" && -f "$ghostty_map" ]]; then
+    local entry
+    entry=$(grep "^${THEME_NAME} " "$ghostty_map" 2>/dev/null || true)
+    if [[ -n "$entry" ]]; then
+      local ghostty_theme="${entry#*= \"}"
+      ghostty_theme="${ghostty_theme%\"*}"
+      sed -i "s/^theme = .*/theme = ${ghostty_theme}/" "$ghostty_config"
+    fi
+  fi
 }
 
 restart_components() {
   # Alacritty auto-reloads on config change via touch
   touch "$HOME/.config/alacritty/alacritty.toml" 2>/dev/null || true
+
+  # Ghostty reloads on SIGUSR1
+  pkill -SIGUSR1 ghostty 2>/dev/null || true
 
   # Waybar
   pkill -x waybar 2>/dev/null; setsid waybar >/dev/null 2>&1 &
@@ -142,7 +158,7 @@ case "${1:-}" in
   --help|-h|"") usage ;;
 esac
 
-THEME_NAME="$(echo "$1" | tr '[:upper:]' '[:lower:]')"
+THEME_NAME="${1,,}"
 THEME_NAME="${THEME_NAME// /-}"
 
 # Validate theme: check custom colors first, then Omarchy themes

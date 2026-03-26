@@ -25,6 +25,7 @@ return {
       "mason-org/mason.nvim",
       "mason-org/mason-lspconfig.nvim",
       "folke/neodev.nvim",
+      "hrsh7th/cmp-nvim-lsp",
     },
     config = function()
       -- Setup mason first

@@ -45,7 +45,7 @@ bind E setw synchronize-panes off \; display "Synchronize: OFF"
 
 # Vi copy mode bindings
 bind -T copy-mode-vi v send-keys -X begin-selection
-bind -T copy-mode-vi y send-keys -X copy-pipe-and-cancel "{{- if eq .chezmoi.os "darwin" }}pbcopy{{- else }}xclip -in -selection clipboard{{- end }}"
+bind -T copy-mode-vi y send-keys -X copy-pipe-and-cancel "{{- if eq .chezmoi.os "darwin" }}pbcopy{{- else }}wl-copy{{- end }}"
 bind -T copy-mode-vi C-v send-keys -X rectangle-toggle
 
 # Quick window selection
@@ -72,3 +72,6 @@ set -g @tokyo-night-tmux_battery_low_threshold 21
 
 # Keep TPM init at the end of the local overlay.
 run '~/.tmux/plugins/tpm/tpm'
+
+# Must be after TPM to avoid being overridden by plugins
+setw -g mode-keys vi

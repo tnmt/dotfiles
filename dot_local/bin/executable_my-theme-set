@@ -170,8 +170,7 @@ case "${1:-}" in
   --help|-h|"") usage ;;
 esac
 
-THEME_NAME="${1,,}"
-THEME_NAME="${THEME_NAME// /-}"
+THEME_NAME="$(echo "$1" | tr '[:upper:]' '[:lower:]' | tr ' ' '-')"
 
 # Validate theme
 COLORS_FILE="$THEME_DIR/colors/$THEME_NAME.toml"

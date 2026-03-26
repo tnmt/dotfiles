@@ -101,6 +101,10 @@ install_configs() {
   # Ghostty: swap theme name
   install_ghostty_theme
 
+  # btop: theme file
+  mkdir -p "$HOME/.config/btop/themes"
+  cp "$THEME_DIR/generated/btop.theme" "$HOME/.config/btop/themes/current.theme"
+
   # Linux-only components
   if [[ "$(uname -s)" == "Linux" ]]; then
     # Waybar: theme CSS
@@ -120,10 +124,6 @@ install_configs() {
     # Hyprland: source-able color config
     cp "$THEME_DIR/generated/hyprland.conf" "$HOME/.config/hypr/theme.conf"
 
-    # btop: theme file
-    mkdir -p "$HOME/.config/btop/themes"
-    cp "$THEME_DIR/generated/btop.theme" "$HOME/.config/btop/themes/current.theme"
-
     # swayosd: theme CSS
     mkdir -p "$HOME/.config/swayosd"
     cp "$THEME_DIR/generated/swayosd.css" "$HOME/.config/swayosd/style.css"
@@ -137,6 +137,9 @@ restart_components() {
   # Ghostty reloads on SIGUSR1
   pkill -SIGUSR1 ghostty 2>/dev/null || true
 
+  # btop reloads on SIGUSR2
+  pkill -SIGUSR2 btop 2>/dev/null || true
+
   # Linux-only components
   if [[ "$(uname -s)" == "Linux" ]]; then
     # Waybar
@@ -147,9 +150,6 @@ restart_components() {
 
     # Hyprland
     hyprctl reload 2>/dev/null || true
-
-    # btop reloads on SIGUSR2
-    pkill -SIGUSR2 btop 2>/dev/null || true
 
     # swayosd: restart with custom style
     pkill -x swayosd-server 2>/dev/null

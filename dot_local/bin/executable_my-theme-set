@@ -142,7 +142,7 @@ case "${1:-}" in
   --help|-h|"") usage ;;
 esac
 
-THEME_NAME="${1,,}"
+THEME_NAME="$(echo "$1" | tr '[:upper:]' '[:lower:]')"
 THEME_NAME="${THEME_NAME// /-}"
 
 # Validate theme: check custom colors first, then Omarchy themes

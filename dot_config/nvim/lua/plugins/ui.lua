@@ -1,23 +1,26 @@
 -- UI plugins
 return {
-  -- Colorscheme
-  {
-    "folke/tokyonight.nvim",
-    lazy = false,
-    priority = 1000,
-    opts = {
-      style = "night",
-      transparent = true,
-      styles = {
-        sidebars = "transparent",
-        floats = "transparent",
+  -- Colorscheme (reads from ~/.config/theme/neovim.lua)
+  (function()
+    local theme = dofile(vim.fn.expand("~/.config/theme/neovim.lua"))
+    return {
+      theme.plugin,
+      lazy = false,
+      priority = 1000,
+      opts = {
+        transparent = true,
+        styles = {
+          sidebars = "transparent",
+          floats = "transparent",
+        },
       },
-    },
-    config = function(_, opts)
-      require("tokyonight").setup(opts)
-      vim.cmd([[colorscheme tokyonight]])
-    end,
-  },
+      config = function(_, opts)
+        local mod = theme.plugin:match("[^/]+$"):gsub("%.", "-")
+        pcall(function() require(mod).setup(opts) end)
+        vim.cmd("colorscheme " .. theme.colorscheme)
+      end,
+    }
+  end)(),
 
   -- Status line
   {
@@ -26,7 +29,7 @@ return {
     event = "VeryLazy",
     opts = {
       options = {
-        theme = "tokyonight",
+        theme = "auto",
         component_separators = "|",
         section_separators = "",
       },

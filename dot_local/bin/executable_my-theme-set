@@ -1,0 +1,176 @@
+#!/bin/bash
+set -euo pipefail
+
+OMARCHY_PATH="${OMARCHY_PATH:-$HOME/ghq/github.com/basecamp/omarchy}"
+THEME_DIR="$HOME/.config/theme"
+TEMPLATES_DIR="$THEME_DIR/templates"
+
+usage() {
+  echo "Usage: my-theme-set <theme-name>"
+  echo "       my-theme-set --list"
+  echo "       my-theme-set --current"
+  exit 1
+}
+
+list_themes() {
+  # Custom themes
+  for f in "$THEME_DIR"/colors/*.toml; do
+    [[ -f "$f" ]] && basename "$f" .toml
+  done
+  # Omarchy themes
+  for d in "$OMARCHY_PATH"/themes/*/; do
+    basename "$d"
+  done
+}
+
+current_theme() {
+  cat "$THEME_DIR/current" 2>/dev/null || echo "(none)"
+}
+
+hex_to_rgb() {
+  local hex="${1#\#}"
+  printf "%d,%d,%d" "0x${hex:0:2}" "0x${hex:2:2}" "0x${hex:4:2}"
+}
+
+render_templates() {
+  local colors_file="$1"
+  local sed_script
+  sed_script=$(mktemp)
+
+  while IFS='=' read -r key value; do
+    key="${key//[\"\' ]/}"
+    [[ $key && $key != \#* ]] || continue
+    value="${value#*[\"\']}"
+    value="${value%%[\"\']*}"
+
+    printf 's|{{ %s }}|%s|g\n' "$key" "$value"
+    printf 's|{{ %s_strip }}|%s|g\n' "$key" "${value#\#}"
+    if [[ $value =~ ^# ]]; then
+      rgb=$(hex_to_rgb "$value")
+      echo "s|{{ ${key}_rgb }}|${rgb}|g"
+    fi
+  done <"$colors_file" >"$sed_script"
+
+  # Alacritty colors
+  sed -f "$sed_script" "$OMARCHY_PATH/default/themed/alacritty.toml.tpl" \
+    > "$THEME_DIR/generated/alacritty.toml"
+
+  # Waybar colors
+  sed -f "$sed_script" "$OMARCHY_PATH/default/themed/waybar.css.tpl" \
+    > "$THEME_DIR/generated/waybar.css"
+
+  # Walker colors
+  sed -f "$sed_script" "$OMARCHY_PATH/default/themed/walker.css.tpl" \
+    > "$THEME_DIR/generated/walker.css"
+
+  # Mako colors
+  sed -f "$sed_script" "$TEMPLATES_DIR/mako.ini.tpl" \
+    > "$THEME_DIR/generated/mako.ini"
+
+  # Hyprland colors
+  sed -f "$sed_script" "$OMARCHY_PATH/default/themed/hyprland.conf.tpl" \
+    > "$THEME_DIR/generated/hyprland.conf"
+
+  # Neovim theme
+  local nvim_map="$THEME_DIR/neovim-themes.toml"
+  if [[ -f "$nvim_map" ]]; then
+    local entry
+    entry=$(grep "^${THEME_NAME} " "$nvim_map" 2>/dev/null || true)
+    if [[ -n "$entry" ]]; then
+      local value="${entry#*= \"}"
+      value="${value%\"*}"
+      local plugin="${value%%,*}"
+      local colorscheme="${value#*,}"
+      cat > "$THEME_DIR/neovim.lua" <<LUA
+return {
+  plugin = "$plugin",
+  colorscheme = "$colorscheme",
+}
+LUA
+    fi
+  fi
+
+  rm "$sed_script"
+}
+
+install_configs() {
+  # Alacritty: import generated colors
+  cp "$THEME_DIR/generated/alacritty.toml" "$HOME/.config/alacritty/themes/current.toml"
+
+  # Waybar: theme CSS
+  cp "$THEME_DIR/generated/waybar.css" "$HOME/.config/waybar/theme/waybar.css"
+
+  # Walker: replace color definitions in style.css
+  local walker_style="$HOME/.config/walker/themes/current/style.css"
+  if [[ -f "$walker_style" ]]; then
+    # Remove existing @define-color lines and prepend new ones
+    grep -v '^@define-color' "$walker_style" > "$walker_style.tmp"
+    cat "$THEME_DIR/generated/walker.css" "$walker_style.tmp" > "$walker_style"
+    rm "$walker_style.tmp"
+  fi
+
+  # Mako: apply colors
+  cp "$THEME_DIR/generated/mako.ini" "$HOME/.config/mako/theme.ini"
+
+  # Hyprland: source-able color config
+  cp "$THEME_DIR/generated/hyprland.conf" "$HOME/.config/hypr/theme.conf"
+}
+
+restart_components() {
+  # Alacritty auto-reloads on config change via touch
+  touch "$HOME/.config/alacritty/alacritty.toml" 2>/dev/null || true
+
+  # Waybar
+  pkill -x waybar 2>/dev/null; setsid waybar >/dev/null 2>&1 &
+
+  # Mako
+  makoctl reload 2>/dev/null || true
+
+  # Hyprland
+  hyprctl reload 2>/dev/null || true
+
+  # Walker: restart service
+  pkill -f "walker --gapplication-service" 2>/dev/null
+  sleep 0.3
+  setsid walker --gapplication-service >/dev/null 2>&1 &
+}
+
+# Parse arguments
+case "${1:-}" in
+  --list|-l) list_themes; exit 0 ;;
+  --current|-c) current_theme; exit 0 ;;
+  --help|-h|"") usage ;;
+esac
+
+THEME_NAME="${1,,}"
+THEME_NAME="${THEME_NAME// /-}"
+
+# Validate theme: check custom colors first, then Omarchy themes
+COLORS_FILE="$THEME_DIR/colors/$THEME_NAME.toml"
+if [[ ! -f $COLORS_FILE ]]; then
+  COLORS_FILE="$OMARCHY_PATH/themes/$THEME_NAME/colors.toml"
+fi
+if [[ ! -f $COLORS_FILE ]]; then
+  echo "Theme '$THEME_NAME' not found."
+  echo "Available themes:"
+  list_themes
+  exit 1
+fi
+
+# Ensure directories exist
+mkdir -p "$THEME_DIR/generated" \
+  "$HOME/.config/alacritty/themes" \
+  "$HOME/.config/waybar/theme" \
+  "$HOME/.config/walker/themes/current" \
+  "$HOME/.config/hypr"
+
+echo "Applying theme: $THEME_NAME"
+
+render_templates "$COLORS_FILE"
+install_configs
+restart_components
+
+# Save current theme
+echo "$THEME_NAME" > "$THEME_DIR/current"
+
+echo "Done."

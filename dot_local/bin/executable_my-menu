@@ -1,0 +1,268 @@
+#!/bin/bash
+
+# System menu using walker --dmenu (based on omarchy-menu)
+
+BACK_TO_EXIT=false
+
+back_to() {
+  local parent_menu="$1"
+
+  if [[ $BACK_TO_EXIT == "true" ]]; then
+    exit 0
+  elif [[ -n $parent_menu ]]; then
+    "$parent_menu"
+  else
+    show_main_menu
+  fi
+}
+
+toggle_existing_menu() {
+  if pgrep -f "walker.*--dmenu" >/dev/null; then
+    walker --close >/dev/null 2>&1
+    exit 0
+  fi
+}
+
+menu() {
+  local prompt="$1"
+  local options="$2"
+  local extra="$3"
+  local preselect="$4"
+
+  read -r -a args <<<"$extra"
+
+  if [[ -n $preselect ]]; then
+    local index
+    index=$(echo -e "$options" | grep -nxF "$preselect" | cut -d: -f1)
+    if [[ -n $index ]]; then
+      args+=("-c" "$index")
+    fi
+  fi
+
+  echo -e "$options" | omarchy-launch-walker --dmenu --width 295 --minheight 1 --maxheight 630 -p "$prompt…" "${args[@]}" 2>/dev/null
+}
+
+terminal() {
+  xdg-terminal-exec "$@"
+}
+
+open_in_editor() {
+  notify-send -u low "Editing config file" "$1"
+  omarchy-launch-editor "$1"
+}
+
+#
+# Trigger
+#
+
+show_trigger_menu() {
+  case $(menu "Trigger" "  Capture\n  Share\n󰔎  Toggle\n  Hardware") in
+  *Capture*) show_capture_menu ;;
+  *Share*) show_share_menu ;;
+  *Toggle*) show_toggle_menu ;;
+  *Hardware*) show_hardware_menu ;;
+  *) show_main_menu ;;
+  esac
+}
+
+show_capture_menu() {
+  case $(menu "Capture" "  Screenshot\n  Screenrecord\n󰃉  Color") in
+  *Screenshot*) grim -g "$(slurp)" - | wl-copy && notify-send -u low "Screenshot copied to clipboard" ;;
+  *Screenrecord*) show_screenrecord_menu ;;
+  *Color*) pkill hyprpicker || hyprpicker -a ;;
+  *) back_to show_trigger_menu ;;
+  esac
+}
+
+show_screenrecord_menu() {
+  # Stop recording if already running
+  if pkill -SIGINT wf-recorder 2>/dev/null; then
+    notify-send -u low "Screen recording saved"
+    exit 0
+  fi
+
+  local outfile="$HOME/Videos/recording-$(date +%Y%m%d-%H%M%S).mp4"
+  mkdir -p "$HOME/Videos"
+
+  case $(menu "Screenrecord" "  With no audio\n  With desktop audio\n  With microphone audio") in
+  *"With no audio"*) wf-recorder -g "$(slurp)" -f "$outfile" & ;;
+  *"With desktop audio"*) wf-recorder -g "$(slurp)" --audio -f "$outfile" & ;;
+  *"With microphone audio"*) wf-recorder -g "$(slurp)" --audio --audio-backend=pipewire -f "$outfile" & ;;
+  *) back_to show_capture_menu ;;
+  esac
+
+  [[ $? -eq 0 ]] && notify-send -u low "Screen recording started" "Press record again to stop"
+}
+
+show_share_menu() {
+  case $(menu "Share" "  Clipboard\n  File") in
+  *Clipboard*)
+    local content
+    content=$(wl-paste 2>/dev/null)
+    if [[ -n $content ]]; then
+      echo "$content" | wl-copy
+      notify-send -u low "Clipboard ready to share" "${content:0:100}"
+    else
+      notify-send -u low "Clipboard is empty"
+    fi
+    ;;
+  *File*)
+    local file
+    file=$(zenity --file-selection 2>/dev/null || true)
+    [[ -n $file ]] && wl-copy < "$file" && notify-send -u low "File copied to clipboard" "$file"
+    ;;
+  *) back_to show_trigger_menu ;;
+  esac
+}
+
+show_toggle_menu() {
+  case $(menu "Toggle" "󰔎  Nightlight\n󱫖  Idle Lock\n󰍜  Top Bar\n  Window Gaps\n󰍹  Display Scaling") in
+  *Nightlight*)
+    if pgrep -x hyprsunset >/dev/null; then
+      pkill -x hyprsunset
+      notify-send -u low "Nightlight off"
+    else
+      hyprsunset &
+      notify-send -u low "Nightlight on"
+    fi
+    ;;
+  *Idle*)
+    if pgrep -x hypridle >/dev/null; then
+      pkill -x hypridle
+      notify-send -u low "Idle lock disabled"
+    else
+      hypridle &
+      notify-send -u low "Idle lock enabled"
+    fi
+    ;;
+  *Bar*)
+    if pgrep -x waybar >/dev/null; then
+      pkill -x waybar
+    else
+      waybar &
+    fi
+    ;;
+  *Gaps*)
+    local current=$(hyprctl getoption general:gaps_out -j | jq '.custom' | tr -d '"' | awk '{print $1}')
+    if [[ "$current" == "0" ]]; then
+      hyprctl keyword general:gaps_out 10
+      hyprctl keyword general:gaps_in 5
+    else
+      hyprctl keyword general:gaps_out 0
+      hyprctl keyword general:gaps_in 0
+    fi
+    ;;
+  *Scaling*)
+    local current=$(hyprctl monitors -j | jq -r '.[0].scale')
+    case $current in
+    1|1.0) hyprctl keyword monitor ,preferred,auto,1.25 ;;
+    1.25) hyprctl keyword monitor ,preferred,auto,1.5 ;;
+    1.5) hyprctl keyword monitor ,preferred,auto,1.75 ;;
+    1.75) hyprctl keyword monitor ,preferred,auto,2 ;;
+    *) hyprctl keyword monitor ,preferred,auto,1 ;;
+    esac
+    notify-send -u low "Display scaling changed"
+    ;;
+  *) back_to show_trigger_menu ;;
+  esac
+}
+
+show_hardware_menu() {
+  case $(menu "Hardware" "  Hybrid GPU") in
+  *"Hybrid GPU"*) notify-send -u low "Hybrid GPU toggle not available" ;;
+  *) show_trigger_menu ;;
+  esac
+}
+
+#
+# Setup
+#
+
+show_setup_menu() {
+  local options="  Audio\n  Wifi\n󰂯  Bluetooth\n󰍹  Monitors"
+  [[ -f ~/.config/hypr/bindings.conf ]] && options="$options\n  Keybindings"
+  options="$options\n  Key Remapping"
+  [[ -f ~/.config/hypr/input.conf ]] && options="$options\n  Input"
+  options="$options\n  Config"
+
+  case $(menu "Setup" "$options") in
+  *Audio*) rfkill unblock all 2>/dev/null; omarchy-launch-or-focus-tui wiremix ;;
+  *Wifi*) rfkill unblock wifi 2>/dev/null; omarchy-launch-or-focus-tui impala ;;
+  *Bluetooth*) rfkill unblock bluetooth 2>/dev/null; omarchy-launch-or-focus-tui bluetui ;;
+  *Monitors*) open_in_editor ~/.config/hypr/monitors.conf ;;
+  *Keybindings*) open_in_editor ~/.config/hypr/bindings.conf ;;
+  *Input*) open_in_editor ~/.config/hypr/input.conf ;;
+  *Key\ Remapping*) open_in_editor /etc/keyd/default.conf ;;
+  *Config*) show_setup_config_menu ;;
+  *) show_main_menu ;;
+  esac
+}
+
+show_setup_config_menu() {
+  case $(menu "Config" "  Hyprland\n  Hypridle\n  Hyprlock\n  Hyprsunset\n  Swayosd\n󰌧  Walker\n󰍜  Waybar\n  Alacritty") in
+  *Hyprland*) open_in_editor ~/.config/hypr/hyprland.conf ;;
+  *Hypridle*) open_in_editor ~/.config/hypr/hypridle.conf ;;
+  *Hyprlock*) open_in_editor ~/.config/hypr/hyprlock.conf ;;
+  *Hyprsunset*) open_in_editor ~/.config/hypr/hyprsunset.conf ;;
+  *Swayosd*) open_in_editor ~/.config/swayosd/config.toml ;;
+  *Walker*) open_in_editor ~/.config/walker/config.toml ;;
+  *Waybar*) open_in_editor ~/.config/waybar/config.jsonc ;;
+  *Alacritty*) open_in_editor ~/.config/alacritty/alacritty.toml ;;
+  *) show_setup_menu ;;
+  esac
+}
+
+#
+# System
+#
+
+show_system_menu() {
+  local options="  Lock\n󰒲  Suspend\n󰍃  Logout\n󰜉  Restart\n󰐥  Shutdown"
+
+  case $(menu "System" "$options") in
+  *Lock*) hyprlock ;;
+  *Suspend*) systemctl suspend ;;
+  *Logout*) hyprctl dispatch exit ;;
+  *Restart*) systemctl reboot ;;
+  *Shutdown*) systemctl poweroff ;;
+  *) back_to show_main_menu ;;
+  esac
+}
+
+#
+# Main
+#
+
+show_connect_menu() {
+  case $(menu "Connect" "󰍹  Sunflower (Windows)") in
+  *Sunflower*) setsid rdp-sunflower &>/dev/null & ;;
+  *) back_to show_main_menu ;;
+  esac
+}
+
+show_main_menu() {
+  go_to_menu "$(menu "Go" "󰀻  Apps\n󱓞  Trigger\n  Setup\n󰍹  Connect\n  System")"
+}
+
+go_to_menu() {
+  case "${1,,}" in
+  *apps*) walker -p "Launch…" ;;
+  *trigger*) show_trigger_menu ;;
+  *toggle*) show_toggle_menu ;;
+  *capture*) show_capture_menu ;;
+  *share*) show_share_menu ;;
+  *screenrecord*) show_screenrecord_menu ;;
+  *setup*) show_setup_menu ;;
+  *connect*) show_connect_menu ;;
+  *system*) show_system_menu ;;
+  esac
+}
+
+toggle_existing_menu
+
+if [[ -n $1 ]]; then
+  BACK_TO_EXIT=true
+  go_to_menu "$1"
+else
+  show_main_menu
+fi

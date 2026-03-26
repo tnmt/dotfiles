@@ -1,7 +1,6 @@
 #!/bin/bash
 set -euo pipefail
 
-OMARCHY_PATH="${OMARCHY_PATH:-$HOME/ghq/github.com/basecamp/omarchy}"
 THEME_DIR="$HOME/.config/theme"
 TEMPLATES_DIR="$THEME_DIR/templates"
 
@@ -13,13 +12,8 @@ usage() {
 }
 
 list_themes() {
-  # Custom themes
   for f in "$THEME_DIR"/colors/*.toml; do
     [[ -f "$f" ]] && basename "$f" .toml
-  done
-  # Omarchy themes
-  for d in "$OMARCHY_PATH"/themes/*/; do
-    basename "$d"
   done
 }
 
@@ -51,37 +45,14 @@ render_templates() {
     fi
   done <"$colors_file" >"$sed_script"
 
-  # Alacritty colors
-  sed -f "$sed_script" "$OMARCHY_PATH/default/themed/alacritty.toml.tpl" \
-    > "$THEME_DIR/generated/alacritty.toml"
-
-  # Waybar colors
-  sed -f "$sed_script" "$OMARCHY_PATH/default/themed/waybar.css.tpl" \
-    > "$THEME_DIR/generated/waybar.css"
-
-  # Walker colors
-  sed -f "$sed_script" "$OMARCHY_PATH/default/themed/walker.css.tpl" \
-    > "$THEME_DIR/generated/walker.css"
-
-  # Mako colors
-  sed -f "$sed_script" "$TEMPLATES_DIR/mako.ini.tpl" \
-    > "$THEME_DIR/generated/mako.ini"
-
-  # Hyprland colors
-  sed -f "$sed_script" "$OMARCHY_PATH/default/themed/hyprland.conf.tpl" \
-    > "$THEME_DIR/generated/hyprland.conf"
-
-  # btop theme
-  sed -f "$sed_script" "$OMARCHY_PATH/default/themed/btop.theme.tpl" \
-    > "$THEME_DIR/generated/btop.theme"
-
-  # hyprlock colors
-  sed -f "$sed_script" "$OMARCHY_PATH/default/themed/hyprlock.conf.tpl" \
-    > "$THEME_DIR/generated/hyprlock.conf"
-
-  # swayosd colors
-  sed -f "$sed_script" "$TEMPLATES_DIR/swayosd.css.tpl" \
-    > "$THEME_DIR/generated/swayosd.css"
+  # Render all templates
+  shopt -s nullglob
+  for tpl in "$TEMPLATES_DIR"/*.tpl; do
+    local filename
+    filename=$(basename "$tpl" .tpl)
+    sed -f "$sed_script" "$tpl" > "$THEME_DIR/generated/$filename"
+  done
+  shopt -u nullglob
 
   # Neovim theme
   local nvim_map="$THEME_DIR/neovim-themes.toml"
@@ -130,9 +101,6 @@ install_configs() {
   # btop: theme file
   mkdir -p "$HOME/.config/btop/themes"
   cp "$THEME_DIR/generated/btop.theme" "$HOME/.config/btop/themes/current.theme"
-
-  # hyprlock: source-able color config
-  cp "$THEME_DIR/generated/hyprlock.conf" "$HOME/.config/hypr/hyprlock-theme.conf"
 
   # swayosd: theme CSS
   mkdir -p "$HOME/.config/swayosd"
@@ -192,11 +160,8 @@ esac
 THEME_NAME="${1,,}"
 THEME_NAME="${THEME_NAME// /-}"
 
-# Validate theme: check custom colors first, then Omarchy themes
+# Validate theme
 COLORS_FILE="$THEME_DIR/colors/$THEME_NAME.toml"
-if [[ ! -f $COLORS_FILE ]]; then
-  COLORS_FILE="$OMARCHY_PATH/themes/$THEME_NAME/colors.toml"
-fi
 if [[ ! -f $COLORS_FILE ]]; then
   echo "Theme '$THEME_NAME' not found."
   echo "Available themes:"

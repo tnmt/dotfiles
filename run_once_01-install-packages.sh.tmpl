@@ -16,7 +16,7 @@ warn() {
 }
 
 bootstrap_homebrew() {
-{{ if and .development (or (eq .chezmoi.os "darwin") (and (eq .chezmoi.os "linux") (ne .chezmoi.osRelease.id "arch"))) -}}
+{{ if and .development (or (eq .chezmoi.os "darwin") (and (eq .chezmoi.os "linux") (not (has .chezmoi.osRelease.id (list "arch" "gentoo"))))) -}}
     if command -v brew &> /dev/null; then
         return
     fi
@@ -78,8 +78,54 @@ sync_arch_packages() {
 {{- end }}
 }
 
+sync_portage_packages() {
+{{ if and (eq .chezmoi.os "linux") (eq .chezmoi.osRelease.id "gentoo") -}}
+    # Accept keywords for testing packages
+    KEYWORDS_FILE="/etc/portage/package.accept_keywords/chezmoi"
+    sudo tee "$KEYWORDS_FILE" > /dev/null <<'KWEOF'
+# Managed by chezmoi — do not edit manually
+{{- range $name, $pkg := $pkgMapping }}
+{{- if and (hasKey $pkg "portage") (hasKey $pkg "portage_keywords") }}
+{{ $pkg.portage }} {{ $pkg.portage_keywords }}
+{{- end }}
+{{- end }}
+KWEOF
+
+    log "Installing declared Portage packages"
+    sudo emerge --noreplace --quiet \
+{{- range $name, $pkg := $pkgMapping }}
+{{- if and (hasKey $pkg "portage") (eq $pkg.mode "base") }}
+        {{ $pkg.portage }} \
+{{- end }}
+{{- end }}
+        # end of base packages
+
+{{ if .development }}
+    sudo emerge --noreplace --quiet \
+{{- range $name, $pkg := $pkgMapping }}
+{{- if and (hasKey $pkg "portage") (eq $pkg.mode "development") }}
+        {{ $pkg.portage }} \
+{{- end }}
+{{- end }}
+        # end of development packages
+{{ end -}}
+
+{{ if .desktop }}
+    sudo emerge --noreplace --quiet \
+{{- range $name, $pkg := $pkgMapping }}
+{{- if and (hasKey $pkg "portage") (eq $pkg.mode "desktop") }}
+        {{ $pkg.portage }} \
+{{- end }}
+{{- end }}
+        # end of desktop packages
+{{ end -}}
+{{- else }}
+    return
+{{- end }}
+}
+
 sync_apt_packages() {
-{{ if and (eq .chezmoi.os "linux") (ne .chezmoi.osRelease.id "arch") -}}
+{{ if and (eq .chezmoi.os "linux") (not (has .chezmoi.osRelease.id (list "arch" "gentoo"))) -}}
     if ! command -v apt &> /dev/null; then
         return
     fi
@@ -182,6 +228,7 @@ EOF
 bootstrap_homebrew
 bootstrap_paru
 sync_arch_packages
+sync_portage_packages
 sync_apt_packages
 install_desktop_apps
 bootstrap_mise

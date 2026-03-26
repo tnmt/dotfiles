@@ -7,14 +7,16 @@
 #   apt         - apt package name (optional, omit if no apt package)
 #   apt_cmd     - Command name on apt if different from package name
 #   pacman      - pacman package name (optional, omit if no pacman package)
+#   portage     - Gentoo portage atom (category/package) (optional)
 #   mode        - Installation mode: "base", "development", "desktop"
 #   tap         - Homebrew tap (e.g. "k1LoW/tap"), omit if not needed
 #   darwin_only - true = brew install on macOS only, skip on Linux (default: false)
 #
 # OS routing (automatic):
-#   macOS       -> brew/cask (if brew or cask field exists)
-#   Linux/Arch  -> pacman (if pacman field exists)
-#   Linux/other -> apt (if apt field exists), otherwise brew (unless darwin_only)
+#   macOS        -> brew/cask (if brew or cask field exists)
+#   Linux/Arch   -> pacman (if pacman field exists)
+#   Linux/Gentoo -> portage (if portage field exists)
+#   Linux/other  -> apt (if apt field exists), otherwise brew (unless darwin_only)
 
 # =============================================================================
 # Base packages
@@ -23,12 +25,14 @@
 [zsh]
 apt = "zsh"
 pacman = "zsh"
+portage = "app-shells/zsh"
 mode = "base"
 
 [fzf]
 brew = "fzf"
 apt = "fzf"
 pacman = "fzf"
+portage = "app-shells/fzf"
 mode = "base"
 
 [direnv]
@@ -41,36 +45,42 @@ mode = "base"
 brew = "git"
 apt = "git"
 pacman = "git"
+portage = "dev-vcs/git"
 mode = "base"
 
 [delta]
 brew = "delta"
 apt = "git-delta"
 pacman = "git-delta"
+portage = "dev-util/git-delta"
 mode = "base"
 
 [tmux]
 brew = "tmux"
 apt = "tmux"
 pacman = "tmux"
+portage = "app-misc/tmux"
 mode = "base"
 
 [gh]
 brew = "gh"
 apt = "gh"
 pacman = "github-cli"
+portage = "dev-util/github-cli"
 mode = "base"
 
 [ripgrep]
 brew = "ripgrep"
 apt = "ripgrep"
 pacman = "ripgrep"
+portage = "sys-apps/ripgrep"
 mode = "base"
 
 [eza]
 brew = "eza"
 apt = "eza"
 pacman = "eza"
+portage = "sys-apps/eza"
 mode = "base"
 
 [bat]
@@ -78,12 +88,15 @@ brew = "bat"
 apt = "bat"
 apt_cmd = "batcat"
 pacman = "bat"
+portage = "sys-apps/bat"
 mode = "base"
 
 [zoxide]
 brew = "zoxide"
 apt = "zoxide"
 pacman = "zoxide"
+portage = "app-shells/zoxide"
+portage_keywords = "~amd64"
 mode = "base"
 
 [atuin]
@@ -95,24 +108,28 @@ mode = "development"
 brew = "jq"
 apt = "jq"
 pacman = "jq"
+portage = "app-misc/jq"
 mode = "base"
 
 [yq]
 brew = "yq"
 apt = "yq"
 pacman = "go-yq"
+portage = "app-misc/yq"
 mode = "base"
 
 [tig]
 brew = "tig"
 apt = "tig"
 pacman = "tig"
+portage = "dev-vcs/tig"
 mode = "base"
 
 [gpg]
 brew = "gpg"
 apt = "gpg"
 pacman = "gnupg"
+portage = "app-crypt/gnupg"
 mode = "base"
 
 [fd]
@@ -120,11 +137,13 @@ brew = "fd"
 apt = "fd-find"
 apt_cmd = "fdfind"
 pacman = "fd"
+portage = "sys-apps/fd"
 mode = "base"
 
 [xclip]
 apt = "xclip"
 pacman = "xclip"
+portage = "x11-misc/xclip"
 mode = "desktop"
 
 # =============================================================================
@@ -134,11 +153,13 @@ mode = "desktop"
 [neovim]
 brew = "neovim"
 pacman = "neovim"
+portage = "app-editors/neovim"
 mode = "development"
 
 [luarocks]
 brew = "luarocks"
 pacman = "luarocks"
+portage = "dev-lua/luarocks"
 mode = "development"
 
 [the_platinum_searcher]
@@ -155,18 +176,22 @@ mode = "development"
 brew = "hub"
 apt = "hub"
 pacman = "hub"
+portage = "dev-vcs/hub"
+portage_keywords = "~amd64"
 mode = "development"
 
 [tree]
 brew = "tree"
 apt = "tree"
 pacman = "tree"
+portage = "app-text/tree"
 mode = "development"
 
 [wget]
 brew = "wget"
 apt = "wget"
 pacman = "wget"
+portage = "net-misc/wget"
 mode = "development"
 
 [1password-cli]
@@ -183,31 +208,37 @@ mode = "development"
 [build-essential]
 apt = "build-essential"
 pacman = "base-devel"
+portage = "sys-devel/gcc"
 mode = "development"
 
 [zlib1g-dev]
 apt = "zlib1g-dev"
 pacman = "zlib"
+portage = "sys-libs/zlib"
 mode = "development"
 
 [libffi-dev]
 apt = "libffi-dev"
 pacman = "libffi"
+portage = "dev-libs/libffi"
 mode = "development"
 
 [libyaml-dev]
 apt = "libyaml-dev"
 pacman = "libyaml"
+portage = "dev-libs/libyaml"
 mode = "development"
 
 [libreadline-dev]
 apt = "libreadline-dev"
 pacman = "readline"
+portage = "sys-libs/readline"
 mode = "development"
 
 [libssl-dev]
 apt = "libssl-dev"
 pacman = "openssl"
+portage = "dev-libs/openssl"
 mode = "development"
 
 # =============================================================================
@@ -265,21 +296,26 @@ darwin_only = true
 [kubectl]
 brew = "kubectl"
 pacman = "kubectl"
+portage = "sys-cluster/kubectl"
 mode = "development"
 
 [helm]
 brew = "helm"
 pacman = "helm"
+portage = "app-admin/helm"
 mode = "development"
 
 [terraform]
 brew = "terraform"
 pacman = "terraform"
+portage = "app-admin/terraform"
+portage_keywords = "~amd64"
 mode = "development"
 
 [hugo]
 brew = "hugo"
 pacman = "hugo"
+portage = "www-apps/hugo"
 mode = "development"
 
 # =============================================================================
@@ -289,10 +325,12 @@ mode = "development"
 [fonts-powerline]
 apt = "fonts-powerline"
 pacman = "powerline-fonts"
+portage = "media-fonts/powerline-symbols"
 mode = "desktop"
 
 [fonts-firacode]
 apt = "fonts-firacode"
+portage = "media-fonts/fira-code"
 mode = "desktop"
 
 [font-meslo-lg-nerd-font]
@@ -308,6 +346,7 @@ mode = "desktop"
 [unzip]
 apt = "unzip"
 pacman = "unzip"
+portage = "app-arch/unzip"
 mode = "desktop"
 
 [exiftool]

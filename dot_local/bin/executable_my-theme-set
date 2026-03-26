@@ -76,37 +76,7 @@ LUA
   rm "$sed_script"
 }
 
-install_configs() {
-  # Alacritty: import generated colors
-  cp "$THEME_DIR/generated/alacritty.toml" "$HOME/.config/alacritty/themes/current.toml"
-
-  # Waybar: theme CSS
-  cp "$THEME_DIR/generated/waybar.css" "$HOME/.config/waybar/theme/waybar.css"
-
-  # Walker: replace color definitions in style.css
-  local walker_style="$HOME/.config/walker/themes/current/style.css"
-  if [[ -f "$walker_style" ]]; then
-    # Remove existing @define-color lines and prepend new ones
-    grep -v '^@define-color' "$walker_style" > "$walker_style.tmp"
-    cat "$THEME_DIR/generated/walker.css" "$walker_style.tmp" > "$walker_style"
-    rm "$walker_style.tmp"
-  fi
-
-  # Mako: apply colors
-  cp "$THEME_DIR/generated/mako.ini" "$HOME/.config/mako/theme.ini"
-
-  # Hyprland: source-able color config
-  cp "$THEME_DIR/generated/hyprland.conf" "$HOME/.config/hypr/theme.conf"
-
-  # btop: theme file
-  mkdir -p "$HOME/.config/btop/themes"
-  cp "$THEME_DIR/generated/btop.theme" "$HOME/.config/btop/themes/current.theme"
-
-  # swayosd: theme CSS
-  mkdir -p "$HOME/.config/swayosd"
-  cp "$THEME_DIR/generated/swayosd.css" "$HOME/.config/swayosd/style.css"
-
-  # Ghostty: swap theme name
+install_ghostty_theme() {
   local ghostty_config="$HOME/.config/ghostty/config"
   local ghostty_map="$THEME_DIR/ghostty-themes.toml"
   if [[ -f "$ghostty_config" && -f "$ghostty_map" ]]; then
@@ -115,8 +85,48 @@ install_configs() {
     if [[ -n "$entry" ]]; then
       local ghostty_theme="${entry#*= \"}"
       ghostty_theme="${ghostty_theme%\"*}"
-      sed -i "s/^theme = .*/theme = ${ghostty_theme}/" "$ghostty_config"
+      if [[ "$(uname -s)" == "Darwin" ]]; then
+        sed -i '' "s/^theme = .*/theme = ${ghostty_theme}/" "$ghostty_config"
+      else
+        sed -i "s/^theme = .*/theme = ${ghostty_theme}/" "$ghostty_config"
+      fi
     fi
+  fi
+}
+
+install_configs() {
+  # Alacritty: import generated colors
+  cp "$THEME_DIR/generated/alacritty.toml" "$HOME/.config/alacritty/themes/current.toml"
+
+  # Ghostty: swap theme name
+  install_ghostty_theme
+
+  # Linux-only components
+  if [[ "$(uname -s)" == "Linux" ]]; then
+    # Waybar: theme CSS
+    cp "$THEME_DIR/generated/waybar.css" "$HOME/.config/waybar/theme/waybar.css"
+
+    # Walker: replace color definitions in style.css
+    local walker_style="$HOME/.config/walker/themes/current/style.css"
+    if [[ -f "$walker_style" ]]; then
+      grep -v '^@define-color' "$walker_style" > "$walker_style.tmp"
+      cat "$THEME_DIR/generated/walker.css" "$walker_style.tmp" > "$walker_style"
+      rm "$walker_style.tmp"
+    fi
+
+    # Mako: apply colors
+    cp "$THEME_DIR/generated/mako.ini" "$HOME/.config/mako/theme.ini"
+
+    # Hyprland: source-able color config
+    cp "$THEME_DIR/generated/hyprland.conf" "$HOME/.config/hypr/theme.conf"
+
+    # btop: theme file
+    mkdir -p "$HOME/.config/btop/themes"
+    cp "$THEME_DIR/generated/btop.theme" "$HOME/.config/btop/themes/current.theme"
+
+    # swayosd: theme CSS
+    mkdir -p "$HOME/.config/swayosd"
+    cp "$THEME_DIR/generated/swayosd.css" "$HOME/.config/swayosd/style.css"
   fi
 }
 
@@ -127,27 +137,30 @@ restart_components() {
   # Ghostty reloads on SIGUSR1
   pkill -SIGUSR1 ghostty 2>/dev/null || true
 
-  # Waybar
-  pkill -x waybar 2>/dev/null; setsid waybar >/dev/null 2>&1 &
+  # Linux-only components
+  if [[ "$(uname -s)" == "Linux" ]]; then
+    # Waybar
+    pkill -x waybar 2>/dev/null; setsid waybar >/dev/null 2>&1 &
 
-  # Mako
-  makoctl reload 2>/dev/null || true
+    # Mako
+    makoctl reload 2>/dev/null || true
 
-  # Hyprland
-  hyprctl reload 2>/dev/null || true
+    # Hyprland
+    hyprctl reload 2>/dev/null || true
 
-  # btop reloads on SIGUSR2
-  pkill -SIGUSR2 btop 2>/dev/null || true
+    # btop reloads on SIGUSR2
+    pkill -SIGUSR2 btop 2>/dev/null || true
 
-  # swayosd: restart with custom style
-  pkill -x swayosd-server 2>/dev/null
-  sleep 0.3
-  setsid swayosd-server --style "$HOME/.config/swayosd/style.css" >/dev/null 2>&1 &
+    # swayosd: restart with custom style
+    pkill -x swayosd-server 2>/dev/null
+    sleep 0.3
+    setsid swayosd-server --style "$HOME/.config/swayosd/style.css" >/dev/null 2>&1 &
 
-  # Walker: restart service
-  pkill -f "walker --gapplication-service" 2>/dev/null
-  sleep 0.3
-  setsid walker --gapplication-service >/dev/null 2>&1 &
+    # Walker: restart service
+    pkill -f "walker --gapplication-service" 2>/dev/null
+    sleep 0.3
+    setsid walker --gapplication-service >/dev/null 2>&1 &
+  fi
 }
 
 # Parse arguments

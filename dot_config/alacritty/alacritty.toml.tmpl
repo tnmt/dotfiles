@@ -8,7 +8,11 @@ TERM = "xterm-256color"
 
 [window]
 blur = true
+{{- if eq .chezmoi.os "darwin" }}
+decorations = "Transparent"
+{{- else }}
 decorations = "full"
+{{- end }}
 dynamic_padding = false
 opacity = 0.95
 startup_mode = "Windowed"

@@ -105,6 +105,9 @@ install_configs() {
   mkdir -p "$HOME/.config/btop/themes"
   cp "$THEME_DIR/generated/btop.theme" "$HOME/.config/btop/themes/current.theme"
 
+  # Kitty: theme colors
+  cp "$THEME_DIR/generated/kitty.conf" "$HOME/.config/kitty/theme.conf"
+
   # Linux-only components
   if [[ "$(uname -s)" == "Linux" ]]; then
     # Waybar: theme CSS
@@ -139,6 +142,9 @@ restart_components() {
 
   # btop reloads on SIGUSR2
   pkill -SIGUSR2 btop 2>/dev/null || true
+
+  # Kitty reloads on SIGUSR1
+  pkill -SIGUSR1 kitty 2>/dev/null || true
 
   # Linux-only components
   if [[ "$(uname -s)" == "Linux" ]]; then

@@ -1,5 +1,8 @@
 # dotfiles
 
+> **⚠️ このリポジトリはアーカイブ済みです。**
+> 現在は [tnmt/mynix](https://github.com/tnmt/mynix) に移行しており、このリポジトリはメンテナンスされていません。
+
 tnmtの開発環境を `chezmoi` で管理するための設定群です。XDG ベースのレイアウトに統一しており、macOS (Homebrew)、Ubuntu (apt + Linuxbrew)、Arch Linux (pacman/paru) に対応しています。1Password との連携も想定しています。
 
 ## 主な内容
